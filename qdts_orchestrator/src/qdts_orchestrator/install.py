@@ -2,6 +2,7 @@ import yaml
 import sys
 import ansible_runner
 import json
+import time
 
 install_play = [
 {
@@ -50,6 +51,7 @@ def get_provisioning_play(content, host):
     return play
 
 def install():
+    start_time = time.time()
     if len(sys.argv) != 3:
         print("Please provide a config file and a provisioning file")
         exit()
@@ -78,6 +80,10 @@ def install():
         prov = generate_qkde_config_file(node_name, nodes)
         p = get_provisioning_play(prov, node_name)
         ansible_runner.run(playbook = p, inventory=inv)
+    
+    end_time = time.time()
+    total_time = end_time-start_time
+    print('\n Installation time: {}s'.format(total_time))
     
 
 
