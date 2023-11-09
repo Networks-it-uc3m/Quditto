@@ -4,6 +4,11 @@ setup(
     name='qdts_orchestrator',
     version='0.2.0',
     packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    package_data={
+        '': ['src/templates/*.j2'],
+    },
     install_requires=[
         'click',
         'pyyaml',
