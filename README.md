@@ -1,11 +1,11 @@
 # QDTS
 The QKD Digital Twin Service (QDTS) is a tool that allows deploying digital twins of QKD networks over classical infrastructure. The service is divided into three different roles of a network: the orchestrator, the nodes and the clients. It is built upon the quantum emulator SimulaQron and incorporates NFV features via OSM.
 
-We are currently working in a paper that will detail the design and implementation of the service.
+For details on the design and implementation of the service, please refer to this [article](https://www.mdpi.com/2076-3417/14/3/1018).
 
 ## Installation
 
-To deploy the digital twin of a QKD network, the only package that need to be installed is the QDTS orchestrator. This can be done downloading the [qdts_orchestrator](https://github.com/Networks-it-uc3m/QDTS/tree/main/qdts_orchestrator) folder, navigate to its directory, and then simply write a pip install command:
+To deploy the digital twin of a QKD network, the only package that needs to be installed is the QDTS orchestrator. This can be done by downloading the [qdts_orchestrator](https://github.com/Networks-it-uc3m/QDTS/tree/main/qdts_orchestrator) folder, navigating to its directory, and then simply writing a pip install command:
 
 ```
 pip install .
@@ -13,7 +13,7 @@ pip install .
 
 This will install all the required packages for the QDTS orchestrator and the QDTS orchestrator itself.
 
-To build applications on the QKD network digital twin enviroment, the client package need to be installed in the device that will act as a network client. This can be done via pip:
+To build applications on the QKD network digital twin environment, the client package needs to be installed in the device that will act as a network client. This can be done via pip:
 
 ```
 pip install qdts-client
@@ -54,15 +54,15 @@ From this point on, the network is operational to run client applications.
 
 ### QKD network using OSM
 
-* *The QDTS orchestrator package has to be installed in the orchestrator device. This method also uses as input a config.yaml file and a inventory.yaml file, to provide the QDTS orchestrator the topology of the desired QKD network. However, in this case it is not necessary to include the IP addresses in either of the documents, as the OSM implementation will provide this information. Therefore, the IP address variable in the documents can remain empty or with any IP, since it will be ignored.*
+The QDTS orchestrator package has to be installed in the orchestrator device. This method also uses as input a config.yaml file and a inventory.yaml file, to provide the QDTS orchestrator with the topology of the desired QKD network. However, in this case, it is not necessary to include the IP addresses in either of the documents, as the OSM implementation will provide this information. Therefore, the IP address variable in the documents can remain empty or with any IP, since it will be ignored.
 
-* *To deploy the QKD network without a pre-deployed machine pool, the [OSM client package](https://osm.etsi.org/docs/user-guide/latest/03-installing-osm.html) needs to be installed in the orchestrator device. Then, the QDTS orchestrator can be executed including "OSM" behind the configuration and inventory file, along with a VIM account, and the ssh credentials so that OSM can to connect to the machines.*
+To deploy the QKD network without a pre-deployed machine pool, the [OSM client package](https://osm.etsi.org/docs/user-guide/latest/03-installing-osm.html) needs to be installed in the orchestrator device. Then, the QDTS orchestrator can be executed including "OSM" behind the configuration and inventory file, along with a VIM account, and the ssh credentials so that OSM can connect to the machines.
 
 ```
 python qdts_orchestrator config.yaml inventory.yaml OSM vim_account ssh_credentials
 ```
 
-* *This command will instantiate the virtual machines required to deploy a digital twin of the QKD nework described in the configuration file,  install the QDTS node software in each node, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the configuration file.*
+This command will instantiate the virtual machines required to deploy a digital twin of the QKD network described in the configuration file,  install the QDTS node software in each node, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the configuration file.
 
-* *From this point on, the network is operational to run client applications.*
+From this point on, the network is operational to run client applications.
 
