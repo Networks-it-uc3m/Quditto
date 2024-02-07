@@ -30,18 +30,16 @@ The qdts_orchestrator and the qdts_client packages must be installed in the test
 
 All the commands must be executed from the tester's workstation and in the directory that contains the [functional_test](https://github.com/Networks-it-uc3m/QDTS/tree/main/functional_test) folder.
 
-1. Execute the following commands to deploy the network
+1. Execute the following command to deploy the network
    ```
-   qdts_install config.yaml inventory.yaml
-   qdts_run inventory.yaml
+   qdts_orchestrator start config.yaml inventory.yaml
    ```
 2. Execute the test with the following command
    ```
    python functional_test.py
    ```
 3. Verify all the tests run and the message "ALL TESTS OKAY!" is shown
-4. Stop the network with the following command
-   ```
-   qdts_stop inventory.yaml
-   ```
 
+* *4. Stop the network with the following command
+   qdts_stop inventory.yaml*
+   
