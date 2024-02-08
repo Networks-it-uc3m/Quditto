@@ -20,7 +20,7 @@ However, if your machines have different addresses, you can replace them in the 
 - functional_test.py
 - inventory.yaml
 
-The tester's workstation can have any modern version of Python 3 (greater than 3.8). The QKD node machines must have Python 3.6, or a more modern version and an auxiliary virtual environment with Python 3.6. The path where Python 3.6 or the virtual environment can be found must be indicated in the inventory.yaml file.
+Both the tester's workstation and the QKD node machines must have a modern version of Python 3. The path where Python 3 can be found in the QKD node machines has to be indicated in the inventory.yaml file.
 
 Additionally, modify the inventory.yaml file if needed with the data from your machines.
 
