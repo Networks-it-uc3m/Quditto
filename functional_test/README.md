@@ -39,7 +39,4 @@ All the commands must be executed from the tester's workstation and in the direc
    python functional_test.py
    ```
 3. Verify all the tests run and the message "ALL TESTS OKAY!" is shown
-
-*4. Stop the network with the following command
-   qdts_stop inventory.yaml*
    
