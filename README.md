@@ -28,15 +28,15 @@ The *quditto QKD node* package will be automatically installed by the *quditto* 
 
 ## Deployinq a digital twin of a QKD network
 
-### Using a preprovisionet set of virtual machines or virtualization containers
+### Using a preprovisioned set of virtual machines or virtualization containers
 
-To deploy a digital twin of a QKD network on a pre-deployed machine pool, the orchestrator device is required to be able to make ssh connections with the machines that will act as QKD nodes. These machines also need to count with Python 3.
+To deploy a digital twin of a QKD network on preprovisioned virtual machines (or virtualization containers), the orchestrator device is required to be able to make *ssh* connections with the machines or containers that will act as QKD nodes. These machines/containers also need to count with Python 3.
 
-The *quditto* orchestrator package has to be installed in the orchestrator device, along with the [OSM client Python package](https://osm.etsi.org/gitlab/osm/osmclient), although in the case of having a pre-deployed machine pool, it will not be used (in future updates this prerequisite will be eliminated). Then, two files have to be written: the config.yaml file, and the inventory.yaml file. An example of these documents can be found in the [functional test](https://github.com/Networks-it-uc3m/QDTS/tree/main/functional_test) folder. 
+The *quditto* orchestrator package has to be installed in the orchestrator device, along with the [OSM client Python package](https://osm.etsi.org/gitlab/osm/osmclient), although in the case of having a pre-deployed  machine pool, it will not be used (in future updates this prerequisite will be eliminated). Two YAML files must be specified to the *quditto orchestrator*: the *config.yaml file*, which describes the desired topology for the QKD network; and the *inventory.yaml* file, providing the details that are necessary to configure each virtual machine and transform it into a functional QKD node in the digital twin. 
 
-The config.yaml file must contain:
+More concreteley, the config.yaml file must contain:
 
-- The service version (version 0.1.0 is, for now, the only version).
+- The service version (version 0.1.0 is, for now, the supported version).
 - The API used by the QKD nodes (currently only the [ETSI GS QKD 004 V2.1.1](https://www.etsi.org/deliver/etsi_gs/QKD/001_099/004/02.01.01_60/gs_qkd004v020101p.pdf) is supported).
 - The QKD protocol used to form the keys (0.1.0 version implements the E91 protocol).
 - The node names along with their IP addresses, and their neighbours.
@@ -47,15 +47,17 @@ The inventory.yaml file must contain:
 - The ssh credentials for each machine.
 - The directory where Python is installed.
 
-Then, the *quditto* orchestrator must be executed from the device of the network orchestrator, along with these two files. 
+An example of these YAML files for a exemplifying QKD network can be found in the [functional test](https://github.com/Networks-it-uc3m/QDTS/tree/main/functional_test) folder. 
+
+The *quditto orchestrator* must be executed providing both files as arguments: 
 
 ```
 qdts_orchestrator start config.yaml inventory.yaml
 ```
 
-This command will install the *quditto* node software in each node, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the configuration file. 
+This command will install the *quditto QKD node* software on each virtual machine (or container) of the pre-deployed machine pool, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the YAML configuration file. 
 
-From this point on, the network is operational to run client applications.
+From this point on, the digital twin on the QKD network is operational to run client applications, which may request crypographic material from the QKD nodes using the requestedf ETSI API (ETSI QKD 004 API, in the current version).
 
 ### Full deployment automation using OSM
 
