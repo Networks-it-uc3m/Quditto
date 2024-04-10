@@ -1,4 +1,4 @@
-from qdts_client import interfaces_pb2, interfaces_pb2_grpc
+from quditto_client import interfaces_pb2, interfaces_pb2_grpc
 import grpc
 from enum import Enum
 

@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "quditto_node"
+version = "0.1.8"
+description = "Software for quditto node"
+authors = ["rmcelaya <rmcelaya@protonmail.com>"]
+
+[tool.poetry.dependencies]
+aioconsole = "0.3.3"
+simulaqron = "3.0.16"
+protobuf = "3.19.6"
+grpcio = "1.48.2"
+bitarray="2.8.1"
+python-daemon="2.3.2"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+quditto_node= "quditto_node.main:cli"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

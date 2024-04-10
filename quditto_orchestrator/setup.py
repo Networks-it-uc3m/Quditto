@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='qdts_orchestrator',
+    name='quditto_orchestrator',
     version='0.2.0',
     packages=find_packages(),
     include_package_data=True,
@@ -18,7 +18,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'qdts_orchestrator = src.cli:cli',
+            'quditto_orchestrator = src.cli:cli',
         ],
     },
 )

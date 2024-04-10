@@ -116,7 +116,17 @@ def remove_instance(osm_hostname, ns_instance):
     logger.info(f'Deleting OSM NS instance {ns_instance}')
     osmclientlib.remove_osm_nsd(instance_name=ns_instance, osm_hostname=osm_hostname)
     
+# Command to stop the simulated qkd-network stopping SimulaQron
+#(thought for pre-deployed machine pools)
 
+@cli.command()
+@click.argument('inv_file', required=True, type=click.File(mode='r'))
+
+def stop(inv_file):
+    """ Function to stop the DT of a QKD Network """
+    logger.info(f'Stopping QKD network')
+    yaml_inv_file = yaml.safe_load(inv_file.read())
+    orchestratorlib.stop(inv_file = yaml_inv_file)
 
 if __name__ == "__main__":
     cli()

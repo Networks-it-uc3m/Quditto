@@ -1,4 +1,4 @@
-from qdts_client.qdts_etsi_004_client import Client004, Status
+from quditto_client.quditto_etsi_004_client import Client004, Status
 
 
 """

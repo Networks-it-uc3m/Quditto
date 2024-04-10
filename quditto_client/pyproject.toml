@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "qdts_client"
-version = "0.2.0"
-description = "Client lib for qdts"
+name = "quditto_client"
+version = "0.2.1"
+description = "Client lib for quditto"
 authors = ["rmcelaya <rmcelaya@protonmail.com>"]
 
 [tool.poetry.dependencies]
