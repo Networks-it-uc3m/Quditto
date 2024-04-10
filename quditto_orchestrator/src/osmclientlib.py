@@ -8,7 +8,7 @@ import pkg_resources
 import os
 
 
-# Definition of auxiliary functions used in the cli qdts_orchestrator app:
+# Definition of auxiliary functions used in the cli quditto_orchestrator app:
 # This function upload the NSD yaml to OSM
 def upload_nsd_2_osm(rendered_yaml, osm_hostname="127.0.0.1"):
     myclient = client.Client(host=osm_hostname, sol005=True)
