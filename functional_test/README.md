@@ -24,7 +24,7 @@ Both the tester's workstation and the QKD node machines must have a modern versi
 
 Additionally, modify the inventory.yaml file if needed with the data from your machines.
 
-The qdts_orchestrator and the qdts_client packages must be installed in the tester's workstation. Please, refer to the main page [README](https://github.com/Networks-it-uc3m/QDTS/blob/main/README.md) to see instructions in this matter.
+The quditto_orchestrator and the quditto_client packages must be installed in the tester's workstation. Please, refer to the main page [README](https://github.com/Networks-it-uc3m/QDTS/blob/main/README.md) to see instructions in this matter.
 
 ### Execution
 
@@ -32,11 +32,11 @@ All the commands must be executed from the tester's workstation and in the direc
 
 1. Execute the following command to deploy the network
    ```
-   qdts_orchestrator start config.yaml inventory.yaml
+   quditto_orchestrator start config.yaml inventory.yaml
    ```
 2. Execute the test with the following command
    ```
-   python functional_test.py
+   python3 functional_test.py
    ```
 3. Verify all the tests run and the message "ALL TESTS OKAY!" is shown
    
