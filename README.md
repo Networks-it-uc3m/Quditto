@@ -10,7 +10,7 @@ For details on the design and implementation of the QKD digital twin orchestrati
 
 ## Installation
 
-The *quditto* software is divided into three different components: the *quditto orchestrator*, the *quditto QKD node*, and the *quditto client*. To support the deployment of a digital twin of a QKD network, the *quditto* orchestrator needs to be installed. This can be done by downloading the [qdts_orchestrator](https://github.com/Networks-it-uc3m/QDTS/tree/main/qdts_orchestrator) folder, navigating to its directory, and then simply writing a pip install command:
+The *quditto* software is divided into three different components: the *quditto orchestrator*, the *quditto QKD node*, and the *quditto client*. To support the deployment of a digital twin of a QKD network, the *quditto* orchestrator needs to be installed. This can be done by downloading the [quditto_orchestrator](https://github.com/Networks-it-uc3m/QDTS/tree/main/quditto_orchestrator) folder, navigating to its directory, and then simply writing a pip install command:
 
 ```
 pip install .
@@ -21,7 +21,7 @@ This will install all the required packages for the *quditto* orchestrator, and 
 To build applications on the QKD network digital twin environment, the *quditto client* package must be installed in the device that will act as a client application (that is, the application that will request cryptographic material from the QKD nodes). This can be done via pip:
 
 ```
-pip install qdts-client
+pip install quditto_client
 ```
 
 The *quditto QKD node* package will be automatically installed by the *quditto* orchestrator on the virtual machines or virtualization containers that will behave as QKD network nodes
@@ -32,7 +32,7 @@ The *quditto QKD node* package will be automatically installed by the *quditto* 
 
 To deploy a digital twin of a QKD network on preprovisioned virtual machines (or virtualization containers), the orchestrator device is required to be able to make *ssh* connections with the machines or containers that will act as QKD nodes. These machines/containers also need to count with Python 3.
 
-The *quditto* orchestrator package has to be installed in the orchestrator device, along with the [OSM client Python package](https://osm.etsi.org/gitlab/osm/osmclient), although in the case of having a pre-deployed  machine pool, it will not be used (in future updates this prerequisite will be eliminated). Two YAML files must be specified to the *quditto orchestrator*: the *config.yaml file*, which describes the desired topology for the QKD network; and the *inventory.yaml* file, providing the details that are necessary to configure each virtual machine and transform it into a functional QKD node in the digital twin. 
+The *quditto* orchestrator package has to be installed in the orchestrator device, along with the [OSM client Python package](https://osm.etsi.org/gitlab/osm/osmclient), as long as no pre-deployed machine pool is available. Two YAML files must be specified to the *quditto orchestrator*: the *config.yaml file*, which describes the desired topology for the QKD network; and the *inventory.yaml* file, providing the details that are necessary to configure each virtual machine and transform it into a functional QKD node in the digital twin. 
 
 More concreteley, the config.yaml file must contain:
 
@@ -52,7 +52,7 @@ An example of these YAML files for a exemplifying QKD network can be found in th
 The *quditto orchestrator* must be executed providing both files as arguments: 
 
 ```
-qdts_orchestrator start config.yaml inventory.yaml
+quditto_orchestrator start config.yaml inventory.yaml
 ```
 
 This command will install the *quditto QKD node* software on each virtual machine (or container) of the pre-deployed machine pool, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the YAML configuration file. 
@@ -66,7 +66,7 @@ The *quditto* orchestrator package has to be installed in the orchestrator devic
 To deploy the QKD network without a pre-deployed machine pool, the OSM client package needs to be installed in the orchestrator device. Then, the *quditto* orchestrator can be executed including "OSM" behind the configuration and inventory file, along with a VIM account, and the ssh credentials so that OSM can connect to the machines.
 
 ```
-qdts_orchestrator start config.yaml inventory.yaml OSM vim_account ssh_credentials
+quditto_orchestrator start config.yaml inventory.yaml OSM vim_account ssh_credentials
 ```
 
 This command will instantiate the virtual machines required to deploy a digital twin of the QKD network described in the configuration file,  install the *quditto* node software in each node, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the configuration file.
