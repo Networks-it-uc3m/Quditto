@@ -4,11 +4,11 @@ import os
 from datetime import datetime
 
 import asyncio
-import quditto_node.backend as backend
-import quditto_node.key_synchronization as key_synchronization
-import quditto_node.configuration as configuration
-import quditto_node.database as database
-import quditto_node.key_management as key_management
+import qd2_node.backend as backend
+import qd2_node.key_synchronization as key_synchronization
+import qd2_node.configuration as configuration
+import qd2_node.database as database
+import qd2_node.key_management as key_management
 
 import time
 import aioconsole
@@ -29,10 +29,10 @@ def init():
     log_queue = queue.Queue()
     queue_handler = QueueHandler(log_queue)
 
-    logger = logging.getLogger("quditto_node")
+    logger = logging.getLogger("qd2_node")
 
     logger.setLevel(logging.DEBUG)
-    log_file_name = "quditto_log" + str(int(time.time())) + ".log"
+    log_file_name = "qd2_log" + str(int(time.time())) + ".log"
     file_handler_path = os.path.join(os.getcwd(), log_file_name)
     file_handler = FileHandler(file_handler_path)
     formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(name)s : %(message)s')

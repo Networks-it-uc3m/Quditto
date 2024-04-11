@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "quditto_node"
+name = "qd2_node"
 version = "0.1.8"
 description = "Software for quditto node"
 authors = ["rmcelaya <rmcelaya@protonmail.com>"]
@@ -15,7 +15,7 @@ python-daemon="2.3.2"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-quditto_node= "quditto_node.main:cli"
+qd2_node= "qd2_node.main:cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

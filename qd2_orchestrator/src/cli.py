@@ -5,7 +5,7 @@ import logging
 
 
 log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-logging.basicConfig(level=logging.INFO, filename='/tmp/quditto_orchestrator.log', format=log_format, filemode='a')
+logging.basicConfig(level=logging.INFO, filename='/tmp/qd2_orchestrator.log', format=log_format, filemode='a')
 logger = logging.getLogger(__name__)
 
 
@@ -37,7 +37,7 @@ def cli():
 def start(config_file, inv_file, osm_hostname, vim_account, ssh_key):
     """execute an emulated QKD network based on a configuration file (yaml)"""
     # Ejemplo de cómo escribir trazas desde la clase principal
-    logger.info("Installation of the quditto_node requirements in every node")
+    logger.info("Installation of the qd2_node requirements in every node")
     
     yaml_config_file = yaml.safe_load(config_file.read())
     yaml_inv_file =  yaml.safe_load(inv_file.read())

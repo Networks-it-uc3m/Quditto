@@ -2,10 +2,10 @@ import logging
 import grpc
 import secrets
 from concurrent import futures
-from quditto_node.grpc_serialization import interfaces_pb2
+from qd2_node.grpc_serialization import interfaces_pb2
 from enum import Enum
-from quditto_node.grpc_serialization import interfaces_pb2_grpc
-from quditto_node.database import ApplicationURI
+from qd2_node.grpc_serialization import interfaces_pb2_grpc
+from qd2_node.database import ApplicationURI
 import json
 
 

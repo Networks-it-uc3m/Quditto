@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from quditto_client import interfaces_pb2 as interfaces__pb2
+import qd2_node.grpc_serialization.interfaces_pb2 as interfaces__pb2
 
 
 class ApplicationInterfaceStub(object):

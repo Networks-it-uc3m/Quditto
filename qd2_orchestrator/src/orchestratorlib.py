@@ -24,7 +24,7 @@ install_play = [
             {
                 "name": "Installing QKD node",
                 "become": "false", 
-                "shell": "/usr/bin/pip install quditto_node==0.1.8"
+                "shell": "/usr/bin/pip install qd2_node==0.1.8"
             },
             {
                 "name": "Creating qkd directory",
@@ -65,7 +65,7 @@ start_play = [
             "name": "Start",
             "shell":{
                 "chdir": "~/qkd_workspace/",
-                "cmd": "{{py_env}}/python3 ~/.local/bin/quditto_node"
+                "cmd": "{{py_env}}/python3 ~/.local/bin/qd2_node"
             },
         }
     ]
@@ -150,7 +150,7 @@ def install(config_file, inv_file):
     end_time = time.time()
     total_time = end_time-start_time
     # print('\n Installation time: {}s'.format(total_time))
-    logger.info(f'Installation time from quditto_orchestrator: {total_time}')
+    logger.info(f'Installation time from qd2_orchestrator: {total_time}')
 
 
 # This function starts simulaqron in every node in the inventory file
@@ -159,7 +159,7 @@ def run(inv_file):
     ansible_runner.run(playbook = start_play, inventory=inv_file)
     end_time = time.time()
     total_time = end_time-start_time
-    logger.info(f'Time for executing all the quditto_nodes: {total_time}')
+    logger.info(f'Time for executing all the qd2_nodes: {total_time}')
 
 
 # This function stops simulaqron in every node in the inventory file
