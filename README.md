@@ -13,7 +13,7 @@ For details on the design and implementation of the QKD digital twin orchestrati
 
 ## Installation
 
-The *quditto* software is divided into three different components: the *quditto orchestrator*, the *quditto QKD node*, and the *quditto client*. To support the deployment of a digital twin of a QKD network, the *quditto* orchestrator needs to be installed. This can be done by downloading the [qd2_orchestrator](https://github.com/Networks-it-uc3m/Quditto/tree/main/qd2_orchestrator) folder, navigating to its directory, and then simply writing a pip install command:
+The *Quditto* software is divided into three different components: the *quditto orchestrator*, the *quditto QKD node*, and the *quditto client*. To support the deployment of a digital twin of a QKD network, the *quditto orchestrator* needs to be installed. This can be done by downloading the [qd2_orchestrator](https://github.com/Networks-it-uc3m/Quditto/tree/main/qd2_orchestrator) folder, navigating to its directory, and then simply writing a pip install command:
 
 ```
 pip install .
@@ -31,7 +31,7 @@ The *quditto QKD node* package will be automatically installed by the *quditto o
 
 ## Deploying a digital twin of a QKD network
 
-*Quditto* allows both the use of pre-deployed resources such as physical machines, virtual machines or virtualization containers, and the use of ETSI NFV-compliant cloud and edge infrastructures, (e.g., based on OpenStack), orchestrated by ETSI OSM. Both scenarios, presented in the figure, are discussed below. 
+*Quditto* allows both the use of pre-deployed resources such as physical machines, virtual machines, or virtualization containers, and the use of ETSI NFV-compliant cloud and edge infrastructures, (e.g., based on OpenStack), orchestrated by ETSI OSM. Both scenarios, presented in the figure, are discussed below. 
 
 
 <img src="Images/deployment_scenarios.png"/>
@@ -43,11 +43,11 @@ To deploy a digital twin of a QKD network on pre-provisioned physical or virtual
 
 The *quditto orchestrator* package has to be installed in the device that will serve as orchestrator. To start the QKD network digital twin deployment, two YAML files must be specified to the *quditto orchestrator*: the *config.yaml* file, which describes the desired topology for the QKD network; and the *inventory.yaml* file, providing the details that are necessary to configure each virtual machine and transform it into a functional QKD node in the digital twin. 
 
-More concreteley, the *config.yaml* file must contain:
+More concretely, the *config.yaml* file must contain:
 
 - The service version (version 0.1.0 is, for now, the supported version).
 - The API used by the QKD nodes (currently only the [ETSI GS QKD 004 V2.1.1](https://www.etsi.org/deliver/etsi_gs/QKD/001_099/004/02.01.01_60/gs_qkd004v020101p.pdf) is supported).
-- The QKD protocol used to form the keys (0.1.0 version implements the E91 protocol).
+- The QKD protocol is used to form the keys (0.1.0 version implements the E91 protocol).
 - The node names along with their IP addresses, and their neighbours.
 
 The *inventory.yaml* file must contain:
@@ -56,7 +56,7 @@ The *inventory.yaml* file must contain:
 - The ssh credentials for each machine or container.
 - The directory where Python is installed.
 
-An sample of these YAML files for a exemplifying QKD network can be found in the [functional test](https://github.com/Networks-it-uc3m/Quditto/tree/main/functional_test) folder. 
+A sample of these YAML files for an exemplifying QKD network can be found in the [functional test](https://github.com/Networks-it-uc3m/Quditto/tree/main/functional_test) folder. 
 
 The *quditto orchestrator* must be executed providing both files as arguments: 
 
@@ -66,7 +66,7 @@ qd2_orchestrator start config.yaml inventory.yaml
 
 This command will install the *quditto QKD node* software on each machine or container indicated in the documents, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the YAML configuration file. 
 
-From this point on, the digital twin of the QKD network is operational to run client applications, which may request crypographic material from the QKD nodes using the requested ETSI API (ETSI QKD 004 API, in the current version).
+From this point on, the digital twin of the QKD network is operational to run client applications, which may request cryptographic material from the QKD nodes using the requested ETSI API (ETSI QKD 004 API, in the current version).
 
 ### Scenario 2: Full deployment automation using OSM
 
@@ -80,5 +80,5 @@ qd2_orchestrator start config.yaml inventory.yaml OSM vim_account ssh_credential
 
 This command will instantiate the virtual machines required to deploy a digital twin of the QKD network described in the configuration file,  install the *quditto node* software in each node, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the configuration file.
 
-From this point on, the network is operational to run client applications.
+From this point on, the network is operational to run client applications written with the *quditto client* package.
 
