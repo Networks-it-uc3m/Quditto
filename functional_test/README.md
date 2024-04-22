@@ -1,12 +1,12 @@
 # Functional test
 
-This folder contains a functional test for *quditto*. 
+This folder contains a functional test for *Quditto*. 
 
 ## Description
 
-The test runs over a digital twin of a three-node QKD network. It opens 4 different key streams, each one with an unique ID (three of them randomly generated and one of them specified by the client). Then, the test retrieves and compares keys exchanged by the QKD node pairs, veryfing that they are indeed the same. Lastly, the key streams are closed.
+The test runs over a digital twin of a three-node QKD network. It opens 4 different key streams, each one with a unique ID (three of them randomly generated and one of them specified by the client). Then, the test retrieves and compares keys exchanged by the QKD node pairs, verifying that they are indeed the same. Lastly, the key streams are closed.
 
-This test checks that the three functions defined in the [ETSI QKD 004 interface](https://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID=54395),*open_connect*, *get_key*, and *close*, are supported. 
+This test checks that the three functions defined in the [ETSI QKD 004 interface](https://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID=54395), *open_connect*, *get_key*, and *close*, are operational. 
 
 ## Execution manual
 
@@ -30,7 +30,7 @@ Both the tester's workstation and the QKD node machines must have a modern versi
 
 Additionally, modify the *inventory.yaml* file if needed with the data from your machines.
 
-The *qd2_orchestrator* and the *qd2_client* packages must be installed in the tester's workstation. Please, refer to the main page [README](https://github.com/Networks-it-uc3m/QDTS/blob/main/README.md) to see instructions in this matter.
+The *qd2_orchestrator* and the *qd2_client* packages must be installed in the tester's workstation. Please, refer to the main page [README](https://github.com/Networks-it-uc3m/QDTS/blob/main/README.md) to see instructions on this matter.
 
 ### Execution
 
