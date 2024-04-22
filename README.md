@@ -5,7 +5,7 @@
 
 QKD networks enable the secure dissemination of cryptographic keys to remote application entities following Quantum Mechanics principles. Still, quantum devices and equipment are still in a development phase, making their availability low and their price high, hindering the deployment of physical QKD networks and, therefore, the research and experimentation activities related to this field. *Quditto* enables the emulation of QKD networks deployments, where experiments and trials can be performed without the quantum physical equipment requirement, nor compromising the integrity of an already built QKD network. 
 
-Our digital twins implement each QKD node in software, allowing its execution in a physical or virutal machine, or in a virtualization container. We use the [SimulaQron](http://www.simulaqron.org) emulator to support quantum links between QKD nodes and qubit operations, such as creating and exchanging Bell pairs. Our QKD node design is alinged with the standarized ETSI APIs, currently supporting the [ETSI QKD 004 interface](https://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID=54395), and uses an implementation of the E91 QKD protocol to create keys between nodes. 
+Our digital twins implement each QKD node in software, allowing its execution in a physical or virutal machine, or in a virtualization container. We use the [*SimulaQron*](http://www.simulaqron.org) emulator to support quantum links between QKD nodes and qubit operations, such as creating and exchanging Bell pairs. Our QKD node design is alinged with the standarized ETSI APIs, currently supporting the [ETSI QKD 004 interface](https://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID=54395), and uses an implementation of the E91 QKD protocol to create keys between nodes. 
 
 The configuration of the virtual QKD nodes is based on [Ansible](https://www.ansible.com), and [ETSI OSM](https://osm.etsi.org) can also be used. QKD nodes may be placed at different locations at the discretion of the user. To this purpose, our solution can leverage ETSI NFV-compliant cloud and edge infrastructures, (e.g., based on OpenStack), if available. Alternatively, it may set up the digital twin of the QKD network using physical or pre-provisioned virtual machines. After the deployment process, user applications can access the different QKD nodes to retrieve cryptographic key material using their respective ETSI standard interface.
 
@@ -64,21 +64,21 @@ The *quditto orchestrator* must be executed providing both files as arguments:
 qd2_orchestrator start config.yaml inventory.yaml
 ```
 
-This command will install the *quditto QKD node* software on each machine or container indicated in the documents, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the YAML configuration file. 
+This command will install the *quditto QKD node* software on each machine or container indicated in the documents, and start the emulation of the different channels, using *SimulaQron*, to connect the nodes as described in the YAML configuration file. 
 
 From this point on, the digital twin of the QKD network is operational to run client applications, which may request cryptographic material from the QKD nodes using the requested ETSI API (ETSI QKD 004 API, in the current version).
 
-### Scenario 2: Full deployment automation using OSM
+### Scenario 2: Full deployment automation using ETSI Open Source MANO (OSM)
 
-The *quditto orchestrator* package has to be installed in the orchestrator device. This method also uses as input a *config.yaml* file and an *inventory.yaml* file, to provide the *quditto orchestrator* with the topology of the desired QKD network. However, in this case, it is not necessary to include the IP addresses in either of the documents, as the OSM implementation will provide this information. Therefore, the IP address variable in the documents can remain empty or with any IP, since it will be ignored.
+This method also uses as input a *config.yaml* file and an *inventory.yaml* file, to provide the *quditto orchestrator* with the topology of the desired QKD network. However, in this case, it is not necessary to include the IP addresses in either of the files, as the OSM software will automatically provide this information. Therefore, the IP address fields in the documents can remain empty or with any value, since they will be ignored.
 
-To deploy the QKD network without a pre-deployed machine pool, the OSM client package needs to be installed in the orchestrator device. Then, the *quditto orchestrator* can be executed including "OSM" behind the configuration and inventory file, along with a VIM account, and the ssh credentials so that OSM can connect to the machines.
+To deploy the QKD network without a pre-deployed machine pool, the OSM client package needs to be installed in the orchestrator device. Then, the *quditto orchestrator* can be executed including "OSM" behind the configuration and inventory file, along with a Virtual Infrasctructure Manager (VIM) account, and the ssh credentials so that OSM can connect to the machines.
 
 ```
 qd2_orchestrator start config.yaml inventory.yaml OSM vim_account ssh_credentials
 ```
 
-This command will instantiate the virtual machines required to deploy a digital twin of the QKD network described in the configuration file,  install the *quditto node* software in each node, and start the emulation of the different channels, using SimulaQron, to connect the nodes as described in the configuration file.
+This command will instantiate the virtual machines required to deploy a digital twin of the QKD network described in the configuration file, install the *quditto node* software in each node, and start the emulation of the different channels, using *SimulaQron*, to connect the nodes as described in the configuration file.
 
 From this point on, the network is operational to run client applications written with the *quditto client* package.
 
