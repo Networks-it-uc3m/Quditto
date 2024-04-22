@@ -53,7 +53,7 @@ More concretely, the *config.yaml* file must contain:
 The *inventory.yaml* file must contain:
 
 - The IP address of each node.
-- The ssh credentials for each machine or container.
+- The SSH credentials for each machine or container.
 - The directory where Python is installed.
 
 A sample of these YAML files for an exemplifying QKD network can be found in the [functional test](https://github.com/Networks-it-uc3m/Quditto/tree/main/functional_test) folder. 
@@ -72,10 +72,10 @@ From this point on, the digital twin of the QKD network is operational to run cl
 
 This method also uses as input a *config.yaml* file and an *inventory.yaml* file, to provide the *quditto orchestrator* with the topology of the desired QKD network. However, in this case, it is not necessary to include the IP addresses or the ssh credentials in either of the files, as the OSM software will automatically provide this information. Therefore, the IP address, the user, and the password fields in the documents can remain empty or with any value, since they will be ignored.
 
-To deploy the QKD network without a pre-deployed machine pool, the OSM client package needs to be installed in the orchestrator device. Then, the *quditto orchestrator* can be executed including three options behind the configuration and inventory files: the *osm_hostname*, the *vim_account*, and the *ssh_key*. These parameters correspond respectively to the IP address of the OSM host that will handle the topology deployment, the VIM account attached to OSM, and a public key document that will be assigned by OSM to the virtual machines it creates, and with which the orchestrator can communicate with them.
+To deploy the QKD network without a pre-deployed machine pool, the [OSM client package](https://osm.etsi.org/gitlab/osm/osmclient) needs to be installed in the orchestrator device. Then, the *quditto orchestrator* can be executed using the command indicated below. As can be seen, this command includes three additional arguments: the *osm_hostname*, the *vim_account*, and the *ssh_key*. These parameters correspond respectively to the IP address of the OSM host that will handle the topology deployment, the Virtual Infrastructure Manager (VIM) account (e.g., OpenStack) configured in OSM  where the allocation of virtual resources to the virtual machines comprising the topology will be conducted, and a public cryptographic key that will be injected from OSM to those virtual machines. This later allows the orchestrator to access the deployed virtual machines through the SSH public-key authentication method (i.e., passwordless) to then perform the corresponding configuration operations. 
 
 ```
-qd2_orchestrator start config.yaml inventory.yaml --osm_hostname "IP-address" --vim_account "VIM account" --ssh_key /path/to/your-document
+qd2_orchestrator start config.yaml inventory.yaml --osm_hostname "IP-address" --vim_account "VIM account" --ssh_key /path/to/public-key-document
 ```
 
 This command will instantiate the virtual machines required to deploy a digital twin of the QKD network described in the configuration file, install the *quditto node* software in each node, and start the emulation of the different channels, using *SimulaQron*, to connect the nodes as described in the configuration file.
