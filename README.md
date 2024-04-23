@@ -1,5 +1,8 @@
-# <img src="Images/quditto_logo.png" width= 220/>
-
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="Images/quditto_logo_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="Images/quditto_logo_light.png">
+  <img alt="Quditto logo" src="Images/quditto_logo_light.png" height="">
+</picture>
 
 *Quditto* aims at providing researchers and industry stakeholders with an open-source software orchestrator capable of deploying digital twins of Quantum Key Distribution (QKD) networks.
 
