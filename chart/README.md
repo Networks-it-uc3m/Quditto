@@ -16,6 +16,11 @@ To deploy Quditto using these charts, navigate to the root directory of this pro
 ```bash
 helm install quditto-chart ./chart
 ```
+After you're finished with the environment, you can uninstall the cart by using:
+
+```bash
+helm uninstall quditto-chart
+```
 
 ## Charts Overview
 ### Qnodes
