@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quditto-orchestrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quditto-orchestrator
+  template:
+    metadata:
+      labels:
+        app: quditto-orchestrator
+      annotations:
+        l2sm/networks: '[{"name": "orchestrator-network"}, "ips":["192.168.1.2"]]'
+    spec:
+      containers:
+      - name: kme-container
+        image: buchillo/qnode_orchestrator:1.0 # TODO: añadir imagen
+        workingDir: /usr/src/app
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+        volumeMounts:  
+        - name: quditto-config-volume
+          mountPath: /etc/quditto/config.yaml
+          subPath: config.yaml  
+        - name: quditto-inventory-volume
+          mountPath: /etc/quditto/inventory.yaml
+          subPath: inventory.yaml  
+      volumes:  
+      - name: quditto-config-volume
+        configMap:
+          name: quditto-config  
+      - name: quditto-inventory-volume
+        configMap:
+          name: quditto-inventory 

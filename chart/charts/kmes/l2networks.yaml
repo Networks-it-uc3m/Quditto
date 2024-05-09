@@ -1,0 +1,18 @@
+{{- $allLinks := dict }}
+{{- range .global.Values.kmes }}
+  {{- range .links }}
+    {{- if not (hasKey $allLinks .name) }}
+      {{- $_ := set $allLinks .name true }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- range $linkName, $_ := $allLinks }}
+apiVersion: l2sm.l2sm.k8s.local/v1
+kind: L2Network
+metadata:
+  name: {{ $linkName }}
+spec:
+  type: vnet
+---
+{{- end }}

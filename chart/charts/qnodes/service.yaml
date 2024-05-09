@@ -1,0 +1,15 @@
+{{- range .Values.global.qnodes }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}-qnode # qkd-vm-uc3m-1-qnode
+spec:
+  selector:
+    app: {{ .name }}-qnode
+  ports:
+  - protocol: TCP
+    port: 22
+    targetPort: 22 
+    # TODO: añadir puerto grpc
+---
+{{- end }}

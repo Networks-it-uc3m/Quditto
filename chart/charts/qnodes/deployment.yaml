@@ -1,0 +1,26 @@
+{{- range .global.Values.qnodes }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}-qnode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .name }}-qnode
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}-qnode
+      annotations:
+        l2sm/networks: '[{"name": "orchestrator-network", "ips":[" .ip "]}]'
+    spec:
+      containers:
+      - name: qnode-container
+        image: buchillo/quditto:1.0 # TODO: añadir imagen
+        workingDir: /usr/src/app
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+---
+{{- end }}

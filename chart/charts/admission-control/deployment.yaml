@@ -1,0 +1,12 @@
+# kubectl exec -it admission-control-pod -- /bin bash sadf<<nombre del script>> # TODO: especificar nombre del script
+apiVersion: v1
+kind: Pod
+metadata:
+  name: admission-control-pod
+  annotations:    
+spec:
+  containers:
+  - name: admission-control
+    command: ["/bin/ash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: alpine:latest # TODO: añadir imagen
+#TODO: necesita conectarse ál orquestador?

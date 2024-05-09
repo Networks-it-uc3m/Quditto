@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quditto-config
+data:
+  config.yaml: |
+    quditto_version: 0.1.0
+    config:
+      application_interface: etsi-gs-qkd-004
+      qkd_protocol: e91
+    nodes:
+      {{- range $index, $node := $.global.Values.qnodes }}
+      - node_name: {{ $node.name }} # Qnode name
+        node_ip: {{ $node.ip }} # QNode IP address
+        neighbour_nodes:
+        {{- $currentNodeName := $node.name }}
+        {{- range $kindex, $kme := $.global.Values.kmes }}
+          {{- if eq $kme.name $currentNodeName }}
+            {{- range $kme.links }}
+              - {{ .to }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+

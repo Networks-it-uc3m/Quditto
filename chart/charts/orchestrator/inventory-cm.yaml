@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quditto-inventory
+data:
+  inventory.yaml: |
+    all:  
+      hosts:
+        {{- range $index, $elem := $.Values.global.qnodes }}
+        {{$elem.name}}:
+          ansible_host: {{$elem.name}}-qnode # Nombre del servicio del qnode
+          ansible_connection: ssh
+          ansible_user: ubuntu
+          ansible_ssh_pass: ubuntu
+          py_env: /home/ubuntu/miniconda3/envs/qkd/ # TODO: cambiar a donde se descarga python dentro de la img del nodo
+        {{- end }}

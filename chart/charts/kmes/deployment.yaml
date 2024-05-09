@@ -1,0 +1,26 @@
+{{- range .global.Values.kmes }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}-kme
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .name }}-kme
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}-kme
+      annotations:
+        l2sm/networks: '{{ toJson .links }}'
+    spec:
+      containers:
+      - name: kme-container
+        image: buchillo/quditto-kme:1.1 # TODO: añadir imagen
+        workingDir: /usr/src/app
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+---
+{{- end }}
