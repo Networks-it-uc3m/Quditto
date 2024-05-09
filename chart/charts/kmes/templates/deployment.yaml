@@ -1,23 +1,23 @@
-{{- range .global.Values.qnodes }}
+{{- range .Values.global.kmes }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .name }}-qnode
+  name: {{ .name }}-kme
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .name }}-qnode
+      app: {{ .name }}-kme
   template:
     metadata:
       labels:
-        app: {{ .name }}-qnode
+        app: {{ .name }}-kme
       annotations:
-        l2sm/networks: '[{"name": "orchestrator-network", "ips":[" .ip "]}]'
+        l2sm/networks: '{{ toJson .links }}'
     spec:
       containers:
-      - name: qnode-container
-        image: buchillo/quditto:1.0 # TODO: añadir imagen
+      - name: kme-container
+        image: buchillo/quditto-kme:1.1 # TODO: añadir imagen
         workingDir: /usr/src/app
         securityContext:
           capabilities:

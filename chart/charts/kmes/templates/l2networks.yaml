@@ -1,5 +1,5 @@
 {{- $allLinks := dict }}
-{{- range .global.Values.kmes }}
+{{- range .Values.global.kmes }}
   {{- range .links }}
     {{- if not (hasKey $allLinks .name) }}
       {{- $_ := set $allLinks .name true }}

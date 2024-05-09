@@ -1,0 +1,4 @@
+apiVersion: v2
+name: qnodes
+description: A subchart for qnodes
+version: 0.1.0

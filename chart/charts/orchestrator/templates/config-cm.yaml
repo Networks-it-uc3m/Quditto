@@ -9,12 +9,12 @@ data:
       application_interface: etsi-gs-qkd-004
       qkd_protocol: e91
     nodes:
-      {{- range $index, $node := $.global.Values.qnodes }}
+      {{- range $index, $node := $.Values.global.qnodes }}
       - node_name: {{ $node.name }} # Qnode name
         node_ip: {{ $node.ip }} # QNode IP address
         neighbour_nodes:
         {{- $currentNodeName := $node.name }}
-        {{- range $kindex, $kme := $.global.Values.kmes }}
+        {{- range $kindex, $kme := $.Values.global.kmes }}
           {{- if eq $kme.name $currentNodeName }}
             {{- range $kme.links }}
               - {{ .to }}

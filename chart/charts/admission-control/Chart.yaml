@@ -1,0 +1,4 @@
+apiVersion: v2
+name: admission-control
+description: A subchart for the admission-controller
+version: 0.1.0
