@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kme-container
-        image: buchillo/qnode_orchestrator:1.0 # TODO: añadir imagen
+        image: buchillo/orch_ehu:latest
         workingDir: /usr/src/app
         securityContext:
           capabilities:
