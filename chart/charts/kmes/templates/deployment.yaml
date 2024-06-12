@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kme-container
-        image: buchillo/quditto-kme:1.1 # TODO: añadir imagen
+        image: buchillo/kme_ehu:latest
         workingDir: /usr/src/app
         securityContext:
           capabilities:
