@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: qnode-container
-        image: buchillo/quditto:1.0 # TODO: añadir imagen
+        image: buchillo/qnode_orch:latest
         workingDir: /usr/src/app
         securityContext:
           capabilities:
