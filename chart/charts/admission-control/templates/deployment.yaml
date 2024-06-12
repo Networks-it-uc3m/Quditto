@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
   - name: admission-control
-    command: ["/bin/ash", "-c", "trap : TERM INT; sleep infinity & wait"]
-    image: alpine:latest # TODO: añadir imagen
-#TODO: necesita conectarse ál orquestador?
+    command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: buchillo/warning_ehu:latest
+#TODO: necesita conectarse ál orquestador?: SIII
