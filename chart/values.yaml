@@ -16,6 +16,9 @@ global:
         - name: third-link
           to: qkd-vm-uc3m-3
           ip: 10.0.0.4/24
+        - name: eighth-link
+          to: qkd-vm-ehu-2
+          ip: 10.0.0.15/24
     - name: qkd-vm-uc3m-3
       links:
         - name: second-link
@@ -43,6 +46,9 @@ global:
         - name: seventh-link
           to: qkd-vm-ehu-3
           ip: 10.0.0.11/24
+        - name: eighth-link
+          to: qkd-vm-uc3m-2
+          ip: 10.0.0.16/24
     - name: qkd-vm-ehu-3
       links:
         - name: sixth-link
