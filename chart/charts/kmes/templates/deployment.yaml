@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kme-container
-        image: buchillo/kme_ehu:latest
+        image: buchillo/kme_ehu:1
         workingDir: /usr/src/app
         securityContext:
           capabilities:
