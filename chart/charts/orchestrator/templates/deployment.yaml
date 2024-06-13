@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kme-container
-        image: buchillo/orch_ehu:latest
+        image: buchillo/orch_ehu:1
         workingDir: /usr/src/app
         securityContext:
           capabilities:
