@@ -36,3 +36,5 @@ spec:
       - name: quditto-inventory-volume
         configMap:
           name: quditto-inventory 
+      nodeName: {{ .Values.qnodes[0] }}
+

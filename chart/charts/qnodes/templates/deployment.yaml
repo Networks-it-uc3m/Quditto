@@ -23,5 +23,6 @@ spec:
         securityContext:
           capabilities:
             add: ["NET_ADMIN"]
+      nodeName: {{ .name }}
 ---
 {{- end }}
