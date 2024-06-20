@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: {{ .name }}-qnode
+        l2sm: "true"
       annotations:
         l2sm/networks: '[{"name": "orchestrator-network", "ips":["{{ .ip }}"]}]'
     spec:
