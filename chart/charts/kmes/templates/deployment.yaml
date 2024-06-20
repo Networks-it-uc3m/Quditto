@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: {{ .name }}-kme
+        l2sm: "true"
       annotations:
         l2sm/networks: '{{ toJson .links }}'
     spec:
