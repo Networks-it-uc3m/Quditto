@@ -7,5 +7,6 @@ metadata:
 spec:
   containers:
   - name: admission-control
+    imagePullPolicy: Always
     command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
     image: buchillo/warning_control:1

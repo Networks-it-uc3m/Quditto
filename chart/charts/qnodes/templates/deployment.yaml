@@ -18,6 +18,7 @@ spec:
     spec:
       containers:
       - name: qnode-container
+        imagePullPolicy: Always
         image: buchillo/qnode_orch:latest
         workingDir: /usr/src/app
         securityContext:

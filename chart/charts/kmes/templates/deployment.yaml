@@ -14,11 +14,14 @@ spec:
         app: {{ .name }}-kme
         l2sm: "true"
       annotations:
-        l2sm/networks: '{{ toJson .links }}'
+        l2sm/networks: 
+        {{- $lengthh := len .links }}
+          '[{{- range $index, $link := .links }}{"name":"{{ $link.name }}","ips":["{{ $link.ips }}"]}{{- if ne (add $index 1) $lengthh }},{{- end }}{{- end }}]'
     spec:
       containers:
       - name: kme-container
         image: buchillo/kme_ehu:1.2
+        imagePullPolicy: Always
         workingDir: /usr/src/app
         securityContext:
           capabilities:

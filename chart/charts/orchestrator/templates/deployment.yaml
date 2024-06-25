@@ -13,12 +13,13 @@ spec:
         app: quditto-orchestrator
         l2sm: "true"
       annotations:
-        l2sm/networks: '[{"name": "orchestrator-network"}, "ips":["192.168.1.2"]]'
+        l2sm/networks: '[{"name": "orchestrator-network"}, "ips":["192.168.1.2/24"]]'
     spec:
       containers:
       - name: kme-container
         image: buchillo/orch_ehu:1
         workingDir: /usr/src/app
+        imagePullPolicy: Always
         securityContext:
           capabilities:
             add: ["NET_ADMIN"]
