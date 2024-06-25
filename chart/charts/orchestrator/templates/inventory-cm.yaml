@@ -12,5 +12,5 @@ data:
           ansible_connection: ssh
           ansible_user: ubuntu
           ansible_ssh_pass: ubuntu
-          py_env: /home/ubuntu/miniconda3/envs/qkd/ # TODO: cambiar a donde se descarga python dentro de la img del nodo
+          py_env: /bin # TODO: cambiar a donde se descarga python dentro de la img del nodo
         {{- end }}

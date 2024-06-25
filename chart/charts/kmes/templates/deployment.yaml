@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: kme-container
-        image: buchillo/kme_ehu:1.2
         imagePullPolicy: Always
+        image: buchillo/kme_ehu:1.3.1
         workingDir: /usr/src/app
         securityContext:
           capabilities:
