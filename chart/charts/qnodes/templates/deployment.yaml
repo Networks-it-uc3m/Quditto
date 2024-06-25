@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: qnode-container
-        image: buchillo/qnode_orch:1.2
+        image: buchillo/qnode_orch:1.3
         workingDir: /usr/src/app
         securityContext:
           capabilities:
