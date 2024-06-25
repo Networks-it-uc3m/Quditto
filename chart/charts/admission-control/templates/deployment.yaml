@@ -8,5 +8,4 @@ spec:
   containers:
   - name: admission-control
     command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
-    image: buchillo/warning_ehu:latest
-#TODO: necesita conectarse ál orquestador?: SIII
+    image: buchillo/warning_control:1

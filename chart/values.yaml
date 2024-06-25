@@ -4,62 +4,62 @@ global:
       links:
         - name: first-link
           to: qkd-vm-uc3m-2
-          ip: 10.0.0.1/24
+          ips: 10.0.0.1/24
         - name: second-link
           to: qkd-vm-uc3m-3
-          ip: 10.0.0.2/24
+          ips: 10.0.0.2/24
     - name: qkd-vm-uc3m-2
       links:
         - name: first-link
           to: qkd-vm-uc3m-1
-          ip: 10.0.0.3/24
+          ips: 10.0.0.3/24
         - name: third-link
           to: qkd-vm-uc3m-3
-          ip: 10.0.0.4/24
+          ips: 10.0.0.4/24
         - name: eight-link
           to: qkd-vm-ehu-2
-          ip: 10.0.0.15/24
+          ips: 10.0.0.15/24
     - name: qkd-vm-uc3m-3
       links:
         - name: second-link
           to: qkd-vm-uc3m-1
-          ip: 10.0.0.5/24
+          ips: 10.0.0.5/24
         - name: third-link
           to: qkd-vm-uc3m-2
-          ip: 10.0.0.6/24
+          ips: 10.0.0.6/24
         - name: fourth-link
           to: qkd-vm-ehu-3
-          ip: 10.0.0.7/24
+          ips: 10.0.0.7/24
     - name: qkd-vm-ehu-1
       links:
         - name: fifth-link
           to: qkd-vm-ehu-2
-          ip: 10.0.0.8/24
+          ips: 10.0.0.8/24
         - name: sixth-link
           to: qkd-vm-ehu-3
-          ip: 10.0.0.9/24
+          ips: 10.0.0.9/24
     - name: qkd-vm-ehu-2
       links:
         - name: fifth-link
           to: qkd-vm-ehu-1
-          ip: 10.0.0.10/24
+          ips: 10.0.0.10/24
         - name: seventh-link
           to: qkd-vm-ehu-3
-          ip: 10.0.0.11/24
+          ips: 10.0.0.11/24
         - name: eight-link
           to: qkd-vm-uc3m-2
-          ip: 10.0.0.16/24
+          ips: 10.0.0.16/24
     - name: qkd-vm-ehu-3
       links:
         - name: sixth-link
           to: qkd-vm-ehu-1
-          ip: 10.0.0.12/24
+          ips: 10.0.0.12/24
         - name: seventh-link
           to: qkd-vm-ehu-2
-          ip: 10.0.0.13/24
+          ips: 10.0.0.13/24
         - name: fourth-link
           to: qkd-vm-uc3m-3
-          ip: 10.0.0.14/24
+          ips: 10.0.0.14/24
 
   qnodes:
     - name: qkd-vm-uc3m-1
