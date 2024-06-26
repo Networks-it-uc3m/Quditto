@@ -6,11 +6,11 @@ spec:
   selector:
     app: quditto-orchestrator
   ports:
-    - name: http
+    - name: kmes
       protocol: TCP
       port: 65432
       targetPort: 65432
-    - name: http
+    - name: warning
       protocol: TCP
       port: 65433
       targetPort: 65433
