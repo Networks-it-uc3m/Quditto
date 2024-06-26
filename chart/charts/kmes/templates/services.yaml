@@ -8,7 +8,7 @@ spec:
     app: {{ .name }}-kme
   ports:
   - protocol: TCP
-    port: 
+    port: 65432
     targetPort: 65432 
     # TODO: añadir puerto grpc
 ---
