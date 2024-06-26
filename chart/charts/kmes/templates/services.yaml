@@ -1,0 +1,15 @@
+{{- range .Values.global.kmes }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .name }}-kme
+spec:
+  selector:
+    app: {{ .name }}-kme
+  ports:
+  - protocol: TCP
+    port: 
+    targetPort: 65432 
+    # TODO: añadir puerto grpc
+---
+{{- end }}
