@@ -6,9 +6,11 @@ spec:
   selector:
     app: quditto-orchestrator
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 65432
-      targetPort: 65432  # Assuming the application listens on the same port internally
-    - protocol: TCP
+      targetPort: 65432
+    - name: http
+      protocol: TCP
       port: 65433
-      targetPort: 65433 
+      targetPort: 65433
