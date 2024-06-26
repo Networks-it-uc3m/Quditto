@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: quditto-orchestrator-svc
+spec:
+  selector:
+    app: quditto-orchestrator
+  ports:
+    - protocol: TCP
+      port: 65432
+      targetPort: 65432  # Assuming the application listens on the same port internally
+    - protocol: TCP
+      port: 65433
+      targetPort: 65433 
