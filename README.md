@@ -52,7 +52,7 @@ The *inventory.yaml* file must contain:
 - The SSH credentials for each machine or container.
 - The directory where Python is installed.
 
-A sample of these YAML files for an exemplifying QKD network can be found in the [Tutorial](https://github.com/Networks-it-uc3m/Quditto/tree/main/Tutorial) folder. 
+A sample of these YAML files for an exemplifying QKD network can be found in the [Tutorial](https://github.com/Networks-it-uc3m/Quditto/tree/v2.0/Tutorial) folder. 
 
 The *qd2_orchestrator* must be executed providing both files as arguments: 
 
