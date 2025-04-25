@@ -1,0 +1,3 @@
+This tutorial is designed to help the user create their first QKD digital network twin and test it. A three-node network, B-A-C, is deployed and an eavesdropper is placed between A and C. Then you try to get a key between A and B, ask B for a key with an identifier that does not exist, get a key between A and C to check the effect of the eavesdropper, and ask for a key between B and C to check that they do indeed recognize that they are not neighbors. 
+
+NOTE: We are working on a more detailed explanation of this tutorial.

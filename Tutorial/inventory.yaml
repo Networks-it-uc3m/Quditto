@@ -1,21 +1,21 @@
 ---
 all:
   hosts:
-    munich:
-      ansible_host: 10.4.16.115
+    A:
+      ansible_host: 10.4.48.59
       ansible_connection: ssh
       ansible_user: ubuntu
       ansible_ssh_pass: ubuntu
-      py_env: /home/ubuntu/miniconda3/envs/qkd/
-    nuremberg:
-      ansible_host: 10.4.16.74
+      py_env: /home/ubuntu/.local/lib/python3.10
+    B:
+      ansible_host: 10.4.48.129
       ansible_connection: ssh
       ansible_user: ubuntu
       ansible_ssh_pass: ubuntu
-      py_env: /home/ubuntu/miniconda3/envs/qkd/
-    salzburg:
-      ansible_host: 10.4.16.132
+      py_env: /home/ubuntu/.local/lib/python3.10
+    C:
+      ansible_host: 10.4.48.188
       ansible_connection: ssh
       ansible_user: ubuntu
       ansible_ssh_pass: ubuntu
-      py_env: /home/ubuntu/miniconda3/envs/qkd/
+      py_env: /home/ubuntu/.local/lib/python3.10
