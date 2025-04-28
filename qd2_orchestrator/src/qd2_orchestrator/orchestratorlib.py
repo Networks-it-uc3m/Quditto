@@ -241,7 +241,7 @@ def get_receiver_play(host):
     return play
 
 def get_receptor_play(host, IP):
-    play = start_receive_play
+    play = start_http_receptor_play
     play[0]["hosts"] = host
     play[0]["tasks"][0]["shell"]["cmd"] = "nohup python3 http_receptor.py "+str(IP)+" 8000 "+str(host)+" &"
     return play

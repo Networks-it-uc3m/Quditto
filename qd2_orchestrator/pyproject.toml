@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qd2_orchestrator"
-version = "2.1.0"
+version = "2.1.1"
 description = "The Quditto orchestrator"
 authors = [  {name="Blanca Lopez", email="blanca.lopez@imdea.org"}, {name="Angela Diaz", email="angela.diaz@imdea.org"},{ name="Javier Perez", email="javier.perez@imdea.org"},]
 requires-python = ">=3.8"
