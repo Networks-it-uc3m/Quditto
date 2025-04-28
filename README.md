@@ -8,7 +8,7 @@
 
 QKD networks enable the secure dissemination of cryptographic keys to remote application entities following Quantum Mechanics principles. Still, quantum devices and equipment remain in a development phase, making their availability low and their price high, hindering the deployment of physical QKD networks and, therefore, the research and experimentation activities related to this field. *Quditto* enables the emulation of QKD network deployments, where experiments and trials can be performed without the quantum physical equipment requirement, nor compromising the integrity of an already built QKD network. 
 
-Our digital twin has three main agents: the orchestrator, based on [Ansible](https://www.ansible.com), automatically configures the virtual machines or containers that will be part of the QKD network; the controller in charge of everything related to the quantum behavior of the network using [NetSquid](https://netsquid.org/); and the nodes, with which the user interacts to request keys. Our QKD node design conforms to the standardized ETSI QKD 014 API, making user-node communication exactly as if they were real physical nodes. By default, an implementation of the BB84 protocol is used to create keys between nodes. There is also the possibility to use another protocol (or another implementation of the same protocol) as explained later.
+Our digital twin has three main agents: the orchestrator, based on [Ansible](https://www.ansible.com), automatically configures the virtual machines or containers that will be part of the QKD network; the controller in charge of everything related to the quantum behavior of the network using [NetSquid](https://netsquid.org/); and the nodes, with which the user interacts to request keys. Our QKD node design conforms to the standardized ETSI QKD 014 API, making user-node communication exactly as if they were real physical nodes. By default, an implementation of the BB84 protocol is used to create keys between nodes. There is also the possibility to use another protocol (or another implementation of the same protocol) as explained later [TO DO].
 
 ## Installation
 
@@ -32,7 +32,7 @@ More concretely, the *config.yaml* file must contain:
 - [Optional] Service version (in the case of this release, the 2.0).
 - General configuration parameters:
   - [Optional] API used by the QKD nodes (currently the [ETSI GS QKD 014 V1.1.1](https://www.etsi.org/deliver/etsi_gs/QKD/001_099/014/01.01.01_60/gs_qkd014v010101p.pdf) is supported).
-  - QKD protocol is used to form the keys (2.0 version implements the bb84 protocol).
+  - QKD protocol is used to form the keys (2.0 version implements by default the BB84 protocol).
   - Name and the IP of the node which will be acting also as the controller.
   - Credentials to access to the NetSquid platform and download the package.
 - [Optional] Name of the sites present in the network.
