@@ -25,7 +25,7 @@ nodes:
         eavesdropper: False
 
       - name: C
-        link_legth: 100
+        link_length: 100
         protocol: bb84
         eavesdropper: True
         eavesdropper_parameters:
