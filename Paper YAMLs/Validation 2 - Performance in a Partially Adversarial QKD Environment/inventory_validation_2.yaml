@@ -1,0 +1,27 @@
+---
+all:
+  hosts:
+    Quintin:
+      ansible_host: 10.4.48.126
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    Quijote:
+      ansible_host: 10.4.48.167
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    Quevedo:
+      ansible_host: 10.4.48.92
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    Aquiles:
+      ansible_host: 10.4.48.239
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10

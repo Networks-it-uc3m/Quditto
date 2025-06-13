@@ -1,0 +1,36 @@
+---
+quditto_version: 2.0
+config:
+  application_interface: etsi-gs-qkd-004
+  qkd_protocol: bb84
+  controller: A
+  ip_controller: 10.4.48.59
+  netsquid_user: angelaadiaz
+  netsquid_pwd: NetSquid5
+
+sites:
+  - Sevilla
+  - Malaga
+  - Cadiz
+
+nodes:
+  - node_name: A
+    node_site: Sevilla
+    node_ip: 10.4.48.59
+    neighbour_nodes:
+
+      - name: B
+        link_length: 154
+        protocol: bb84
+        eavesdropper: False
+
+
+  - node_name: B
+    node_site: Malaga
+    node_ip: 10.4.48.129
+    neighbour_nodes:
+
+      - name: A
+        link_length: 154
+        protocol: bb84
+        eavesdropper: False
