@@ -70,10 +70,6 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
 - ❌ The system replies that **no such neighbor exists**.
 -  *This limitation can be addressed by implementing a Key Management Entity (KME) script that performs quantum key relaying via node A as a trusted node, but this is not directly supported by Quditto.*
 
----
-
-
-This tutorial validates Quditto’s ability to simulate QKD exchanges under normal, adversarial, and misconfigured conditions, providing a solid foundation for future quantum networking experimentation.
 
 
 
