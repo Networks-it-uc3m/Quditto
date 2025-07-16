@@ -60,7 +60,7 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
 ### 3.  Non-Neighbor Exchange: Node B ↔ Node C
 
 - You try to initiate key requests between **nodes B and C** (both directions). The system replies that **no such neighbor exists**.
--  *Note: This limitation can be addressed by implementing a Key Management Entity (KME) script that performs quantum key relaying via node A as a trusted node, but this is not directly supported by Quditto.*
+>  *Note: This limitation can be addressed by implementing a Key Management Entity (KME) script that performs quantum key relaying via node A as a trusted node, but this is not directly supported by Quditto.*
 
 
 
