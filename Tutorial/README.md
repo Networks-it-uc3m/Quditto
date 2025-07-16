@@ -9,7 +9,7 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
 ## 🔧 Tutorial Setup Steps
 
 1. **Select Devices**  
-   Choose at least **three Python-capable devices** accessible via SSH to act as the distributed nodes.  
+   Choose at least **three Python-capable devices** accessible via SSH and with pip to act as the distributed nodes.  
    > 💡 *Note: The Quditto orchestrator and controller can run on any of the nodes—no dedicated machine is required.*
 
    In the provided YAML example, the controller runs on **node A**.
