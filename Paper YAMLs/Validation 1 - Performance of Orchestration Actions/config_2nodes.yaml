@@ -5,8 +5,8 @@ config:
   qkd_protocol: bb84
   controller: A
   ip_controller: 10.4.48.59
-  netsquid_user: angelaadiaz
-  netsquid_pwd: NetSquid5
+  netsquid_user: user
+  netsquid_pwd: password
 
 sites:
   - Sevilla
