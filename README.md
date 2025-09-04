@@ -10,6 +10,7 @@ QKD networks enable the secure dissemination of cryptographic keys to remote app
 
 Our digital twin has three main agents: the orchestrator, based on [Ansible](https://www.ansible.com), automatically configures the virtual machines or containers that will be part of the QKD network; the controller in charge of everything related to the quantum behavior of the network using [NetSquid](https://netsquid.org/); and the nodes, with which the user interacts to request keys. Our QKD node design conforms to the standardized ETSI QKD 014 API, making user-node communication exactly as if they were real physical nodes. By default, an implementation of the BB84 protocol is used to create keys between nodes. There is also the possibility to use another protocol (or another implementation of the same protocol) as explained later [TO DO].
 
+
 ## Installation
 
 The *Quditto* software is divided into three different Python packages that correspond to the three different agents of the digital twins: the *qd2_orchestrator*, the *qd2_controller*, and the *qd2_nodes*. To support the deployment of a QKD network digital twin, the *qd2_orchestrator* needs to be installed. This can be done via pip: 
@@ -116,3 +117,4 @@ From this point on, the digital twin of the QKD network is operational to run cl
 ## ACK
 
 This platform has been developed under the MADQuantum-CM project, funded by the Regional Government of Madrid, the Spanish State through the Recovery, Transformation and Resilience Plan, and the European Union through the NextGeneration EU funds, the project 6GINSPIRE PID2022-137329OB-C42, funded by MCIN/AEI/10.13039/501100011033/, and the EU Horizon Europe project Quantum Security Networks Partnership (QSNP), under grant 101114043.
+
