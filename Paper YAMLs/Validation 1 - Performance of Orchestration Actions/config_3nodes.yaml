@@ -1,7 +1,7 @@
 ---
 quditto_version: 2.0
 config:
-  application_interface: etsi-gs-qkd-004
+  application_interface: etsi-gs-qkd-014
   qkd_protocol: bb84
   controller: A
   ip_controller: 10.4.48.59
@@ -55,5 +55,6 @@ nodes:
       eavesdropper_parameters:
         eavesdropper_distance: 55
         percentage_intercepted_qubits: 10
+
 
 
