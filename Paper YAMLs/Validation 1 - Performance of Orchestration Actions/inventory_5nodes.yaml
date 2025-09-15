@@ -1,0 +1,34 @@
+---
+all:
+  hosts:
+    A:
+      ansible_host: 10.4.48.59
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    B:
+      ansible_host: 10.4.48.129
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    C:
+      ansible_host: 10.4.48.188
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    D:
+      ansible_host: 10.4.48.53
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+    E:
+      ansible_host: 10.4.48.156
+      ansible_connection: ssh
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      py_env: /home/ubuntu/.local/lib/python3.10
+      

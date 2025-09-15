@@ -1,0 +1,82 @@
+---
+quditto_version: 2.0
+config:
+  application_interface: etsi-gs-qkd-014
+  qkd_protocol: bb84
+  controller: Quintin
+  ip_controller: 10.4.48.126
+  netsquid_user: user
+  netsquid_pwd: pwd
+
+sites:
+  - MadQ
+
+nodes:
+  - node_name: Quintin
+    node_site: MadQ
+    node_ip: 10.4.48.126
+    neighbour_nodes:
+
+      - name: Quijote
+        link_length: 24.2
+        p_loss_length: 0.247934
+        n_photons: 2008
+        protocol: bb84
+        eavesdropper: False
+
+
+  - node_name: Quijote
+    node_site: MadQ
+    node_ip: 10.4.48.167
+    neighbour_nodes:
+
+      - name: Quintin
+        link_length: 24.2
+        p_loss_length: 0.247934
+        n_photons: 2008
+        protocol: bb84
+        eavesdropper: False
+
+      - name: Quevedo
+        link_length: 7.4
+        p_loss_length: 0.729730
+        n_photons: 1609
+        protocol: bb84
+        eavesdropper: False
+
+      - name: Aquiles
+        link_length: 40.68
+        p_loss_length: 0.292527
+        n_photons: 8922
+        protocol: bb84
+        eavesdropper: False
+
+
+  - node_name: Quevedo
+    node_site: MadQ
+    node_ip: 10.4.48.92
+    neighbour_nodes:
+
+      - name: Quijote
+        link_length: 7.4
+        p_loss_length: 0.729730
+        n_photons: 1609
+        protocol: bb84
+        eavesdropper: False
+
+
+  - node_name: Aquiles
+    node_site: MadQ
+    node_ip: 10.4.48.239
+    neighbour_nodes:
+
+      - name: Quijote
+        link_length: 40.68
+        p_loss_length: 0.292527
+        n_photons: 8922
+        protocol: bb84
+        eavesdropper: False
+
+
+
+
