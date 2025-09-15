@@ -1,7 +1,7 @@
 ---
 quditto_version: 2.0
 config:
-  application_interface: etsi-gs-qkd-004
+  application_interface: etsi-gs-qkd-014
   qkd_protocol: bb84
   controller: A
   ip_controller: 10.4.48.59
@@ -21,12 +21,12 @@ nodes:
 
       - name: B
         link_length: 154
-        protocol: bb84
+        protocol: bb84_att.py
         eavesdropper: False
 
       - name: C
         link_legth: 100
-        protocol: bb84
+        protocol: bb84_with_eve.py
         eavesdropper: True
         eavesdropper_parameters:
           eavesdropper_distance: 45
@@ -39,7 +39,7 @@ nodes:
 
       - name: A
         link_length: 154
-        protocol: bb84
+        protocol: bb84_att.py
         eavesdropper: False
 
   - node_name: C
@@ -49,7 +49,7 @@ nodes:
 
     - name: A
       link_length: 100
-      protocol: bb84
+      protocol: bb84_with_eve.py
       eavesdropper: True
       eavesdropper_parameters:
         eavesdropper_distance: 55
