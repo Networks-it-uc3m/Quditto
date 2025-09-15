@@ -28,8 +28,6 @@ nodes:
       - name: C
         link_length: 100
         protocol: bb84_with_eve.py
-        link_length: 100
-        protocol: bb84
         eavesdropper: True
         eavesdropper_parameters:
           eavesdropper_distance: 45
