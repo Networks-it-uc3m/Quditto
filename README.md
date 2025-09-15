@@ -112,3 +112,7 @@ qd2_orchestrator start config.yaml inventory.yaml
 This command will install the *qd2_node* package on every machine/container, and the *qd2_controller* package on the specified one. Then, it will start all the necessary processes of said packages to start the emulation of the QKD network.
 
 From this point on, the digital twin of the QKD network is operational to run client applications, which may request cryptographic material from the QKD nodes using the 014 ETSI API.
+
+## ACK
+
+This platform has been developed under the MADQuantum-CM project, funded by the Regional Government of Madrid, the Spanish State through the Recovery, Transformation and Resilience Plan, and the European Union through the NextGeneration EU funds, the project 6GINSPIRE PID2022-137329OB-C42, funded by MCIN/AEI/10.13039/501100011033/, and the EU Horizon Europe project Quantum Security Networks Partnership (QSNP), under grant 101114043.
