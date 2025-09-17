@@ -1,0 +1,8 @@
+# Python 3.8.19
+numpy==1.24.4
+scipy==1.9.3
+pydynaa==1.0.2
+
+# GitHub dependencies
+git+https://github.com/CQCL/cryptomite.git@8d140d71fce63c5a7a167dfd2d4cebfe0882362f #subdirectory=cryptomite/trevisan
+git+https://github.com/brunorijsman/cascade-python.git@c6706ab0985f9686c9c6bc74a254016d186a8132 #subdirectory=cascade-python/cascade

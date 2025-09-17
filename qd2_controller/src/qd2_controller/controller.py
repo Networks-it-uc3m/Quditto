@@ -8,11 +8,15 @@ import uuid
 import base64
 import logging
 
+
 logging.basicConfig(
     filename='controller.log',         
     level=logging.INFO,                
     format='%(asctime)s - %(levelname)s - %(message)s'  
 )
+
+logging.getLogger('pika').setLevel(logging.WARNING)
+
 
 with open("quditto_v2.yaml") as f:
     cfg = yaml.load(f, Loader=yaml.FullLoader)
@@ -45,19 +49,14 @@ unique_connections = count_all_connections(cfg)
 num_groups = len(unique_connections)
 groups_locks = {i: threading.Lock() for i in range(num_groups)}
 
-def emul_BB84(group_id, group_lock, key, d, origin, n, call_id, e_d, percentage):
+def emul_BB84(group_id, group_lock, key, d, protocol, origin, n, call_id, params):
     #print(f"Preparing link {group_id}...")
     logging.info(f"Preparing link {group_id} for simulation")
-    #print(f"{e_d},{percentage}")
 
-    #script_name = "BB84_hilo.py"
-    script_name = "bb84_with_eve.py"
 
     #print(f"Running BB84 on link: {group_id} with parameters: {key} {d}")
 
-
-    #command = ['python3', script_name, str(group_id), key, d]
-    command = ['python3', str(script_name), str(key), str(d), str(e_d), str(percentage)]
+    command = ['python3', str(protocol), str(key), str(d), str(params)]
 
     #Entering the corresponding link's lock
     with group_lock:
@@ -95,7 +94,9 @@ def emul_BB84(group_id, group_lock, key, d, origin, n, call_id, e_d, percentage)
             temp_T = output_time
             counter = counter +1
             key_left = int(key) - int(len(temp_A))
-            command = ['python3', script_name, str(group_id), str(key_left), d]
+            #command = ['python3', script_name, str(group_id), str(key_left), d]
+            #command = ['python3', str(script_name), str(key_left), str(d), str(e_d), str(percentage)]
+            command = ['python3', str(protocol), str(key_left), str(d), str(params)]
             result = subprocess.run(command, capture_output=True, text=True)
             #print(f"Call number {counter} content: {result.stdout!r}")
             logging.info(f"Simulation try number {counter}")
@@ -117,6 +118,11 @@ def emul_BB84(group_id, group_lock, key, d, origin, n, call_id, e_d, percentage)
             Alice_key = temp_A + Alice_key
             Bob_key = temp_B + Bob_key
             output_time = temp_T + output_time
+
+        if int(key) < int(len(Alice_key)):
+            #Implement buffer here
+            Alice_key = Alice_key[:int(key)]
+            Bob_key = Bob_key[:int(key)]
 
         #Blocking the sending of results until the specified time has passed
         current_time = time.perf_counter()
@@ -173,6 +179,7 @@ def callback(ch, method, properties, body):
     n = body["node"]
     position = None
     reverse = 0
+    params = f"params_{origin}_{n}.yaml"
 
     for idx, connection in enumerate(unique_connections):
         if connection == origin + n:  # Locate the connection's position on the list
@@ -206,12 +213,25 @@ def callback(ch, method, properties, body):
                 for neighbour in node["neighbour_nodes"]:
                     if neighbour.get("name") == n and "link_length" in neighbour:
                         d = neighbour["link_length"]
-                        if neighbour.get("eavesdropper") == True:
-                            e_d = neighbour["eavesdropper_parameters"]["eavesdropper_distance"]
-                            percentage = neighbour["eavesdropper_parameters"]["percentage_intercepted_qubits"]
-                        else:
-                            e_d = 0
-                            percentage = 0
+                        protocol = neighbour["protocol"]
+                        filtered_params = {}
+                        ch_params_list = neighbour.get("chanel_parameters", [])
+                        if ch_params_list:
+                            # ch_params_list must be a list with just one dict
+                            ch_params_dict = ch_params_list[0] if isinstance(ch_params_list[0], dict) else {}
+
+                            # Filter params with value other than None
+                            filtered_params = {
+                                k: v for k, v in ch_params_dict.items() if v is not None
+                            }
+
+                        if neighbour["eavesdropper"] == True:
+                            filtered_params["eavesdropper_distance"] = neighbour["eavesdropper_parameters"]["eavesdropper_distance"]
+                            filtered_params["percentage_intercepted_qubits"] = neighbour["eavesdropper_parameters"]["percentage_intercepted_qubits"]
+
+                        # Save the parameters in the yaml param file
+                        with open(params, "w") as file:
+                            yaml.dump(filtered_params, file, default_flow_style=False)
                         break
 
         if reverse == 1:
@@ -221,7 +241,7 @@ def callback(ch, method, properties, body):
             n = x
 
         d=str(d)
-        hilo = threading.Thread(target=emul_BB84, args=(group_id, groups_locks[group_id], key, d, origin, n, call_id, e_d, percentage))
+        hilo = threading.Thread(target=emul_BB84, args=(group_id, groups_locks[group_id], key, d, protocol, origin, n, call_id, params))
         hilo.start()
 
     else:

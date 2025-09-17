@@ -2,6 +2,7 @@ import random
 import netsquid as ns
 import numpy as np
 import sys
+import yaml
 import json
 import netsquid.components.instructions as instr
 from netsquid.nodes import Node, Network, DirectConnection
@@ -386,11 +387,16 @@ def bb84_key_perc(desired_key_length, link_length, distance_to_alice, percentage
 
 
 def main():
-    if len(sys.argv) == 5:
+    if len(sys.argv) == 4:
         desired_key_length = int(sys.argv[1])
         link_length = float(sys.argv[2])
-        distance_to_alice = float(sys.argv[3])
-        percentage = float(sys.argv[4])
+        params = str(sys.argv[3])
+        
+    with open(params, "r") as f:
+        PARAMETER_VALUES = yaml.safe_load(f)
+
+    distance_to_alice = PARAMETER_VALUES["eavesdropper_distance"]
+    percentage = PARAMETER_VALUES["percentage_intercepted_qubits"]
     
     alice_final_key, bob_final_key, qber, simulated_time, repetitions = bb84_key_perc(desired_key_length, link_length, distance_to_alice, percentage)
 

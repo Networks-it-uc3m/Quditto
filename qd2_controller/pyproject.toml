@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qd2_controller"
-version = "1.1.2"
+version = "1.1.3"
 description = "Software for Quditto controller"
 authors = [ { name="Javier Perez", email="javier.perez@imdea.org"}, {name="Blanca Lopez", email="blanca.lopez@imdea.org"}, {name="Angela Diaz", email="angela.diaz@imdea.org"},]
 requires-python = ">=3.8"
@@ -14,4 +14,8 @@ dependencies = [
     "aio_pika ~= 9.5.5",
     "uvicorn ~= 0.34.0",
     "fastapi ~= 0.115.11",
+    "numpy == 1.24.4",
+    "scipy == 1.9.3",
+    "pydynaa == 1.0.2",
+    "cryptomite"
 ]
