@@ -214,6 +214,27 @@ stop_play = [
 },
 ]
 
+## Get the name of the simulation scripts in the controller
+
+get_simulation_scripts_play = [
+    {
+        "name": "Get simulation scripts",
+        "hosts": "",  
+        "tasks": [
+            {
+                "name": "Get scripts",
+                "shell": {
+                    "chdir": "{{py_env}}/site-packages/qd2_controller",
+                    "cmd": "ls -p | grep -E '^[^/]+\\.py$' | grep -v '^__init__\\.py$' | grep -v 'controller.py'"
+                },
+                "register": "sim_scripts"
+            }
+        ]
+    }
+]
+
+
+
 
 #Ancilliary functions to fill the plays
 
@@ -303,3 +324,22 @@ def run(config_file, inv_file):
 
 def stop_nodes(inv_file):
     ansible_runner.run(playbook = stop_play, inventory = inv_file)
+
+def get_scripts(config_file, inv_file):
+    config_array = config_file["config"]
+    controller = config_array["controller"]
+    play = get_simulation_scripts_play
+    play[0]["hosts"] = controller
+    r = ansible_runner.run(playbook = play, inventory = inv_file, quiet = True)
+    # Extract the stdout lines from the registered variable "sim_scripts" in the play results
+    script_names = []
+    for event in r.events:
+        if event.get('event') == 'runner_on_ok':
+            if event['event_data']['task'] == 'Get scripts':
+                res = event['event_data']['res']
+                if 'stdout_lines' in res:
+                    script_names = res['stdout_lines']
+                    break
+
+    return script_names
+

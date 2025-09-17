@@ -36,5 +36,22 @@ def stop(inv_file):
     yaml_inv_file = yaml.safe_load(inv_file.read())
     stop_nodes(inv_file = yaml_inv_file)
 
+# Command to see the simulations scripts available in the controller
+@cli.command()
+@click.argument('config_file', required=True, type=click.File(mode='r'))
+@click.argument('inv_file', required=True, type=click.File(mode='r'))
+
+def available_scripts(config_file, inv_file):
+    """Print all the simulation scripts available at the controller"""
+
+    global scripts
+    yaml_config_file = yaml.safe_load(config_file.read())
+    yaml_inv_file =  yaml.safe_load(inv_file.read())
+    scripts = get_scripts(config_file=yaml_config_file, inv_file=yaml_inv_file)
+    print('The available simulation scripts are:')
+    print(*scripts, sep='\n')
+
+
 if __name__ == "__main__":
     cli()
+
