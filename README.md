@@ -28,7 +28,7 @@ __The *qd2_controller* and the *qd2_node* packages will be installed automatical
 
 *Note: We are working to provide the option to use OSM for automatic deployment of virtual machines, as it was in version 1.0. For now, the only deployment mode supported by this version is to use a set of pre-provisioned machines or containers.*
 
-To deploy a digital twin of a QKD network on pre-provisioned physical or virtual machines, or virtualization containers, __the orchestrator device is required to be able to make *ssh* connections__ with the machines or containers that will act as QKD nodes. These machines and containers need to count with Python 3.
+To deploy a digital twin of a QKD network on pre-provisioned physical or virtual machines, or virtualization containers, __the orchestrator device is required to be able to make *ssh* connections with Ansible (usually this means having *sshpass* installed)__ with the machines or containers that will act as QKD nodes. These machines and containers need to count with Python 3.
 
 The *qd2_orchestrator* package has to be installed in the device that will serve as the orchestrator. To start the QKD network digital twin deployment, __two YAML files__ must be specified to the *qd2_orchestrator*: the __*config.yaml*__ file, which describes the configuration of the QKD network; and the __*inventory.yaml*__ file, providing the details that are necessary to access each machine/container and transform it into a functional QKD node in the digital twin.
 
@@ -154,3 +154,4 @@ If you have any doubts or feedback, please feel free to contact us through e-mai
 This platform has been developed under the MADQuantum-CM project, funded by the Regional Government of Madrid, the Spanish State through the Recovery, Transformation and Resilience Plan, and the European Union through the NextGeneration EU funds, the project 6GINSPIRE PID2022-137329OB-C42, funded by MCIN/AEI/10.13039/501100011033/, and the EU Horizon Europe project Quantum Security Networks Partnership (QSNP), under grant 101114043.
 
 ### Other projects where Quditto has been used
+
