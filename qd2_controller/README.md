@@ -1,12 +1,12 @@
-## Quditto Controller
+# Quditto Controller
 
 The Quditto Controller (or *qd2_controller*) is the __responsible for emulating the quantum behavior__ of the network within the Quditto digital twin. By default, it leverages [NetSquid](https://netsquid.org/) to simulate quantum hardware and their interactions across the network following QKD protocol implementations. However, users can use any Python simulation platform, although they will need to install it manually on the machine or container that acts as the controller.
 
-### Structure
+## Structure
 
 There are two types of files within the *qd2_controller* package, the core file and the protocol implementations.
 
-#### Core file
+### Core file
 
 __The *controller.py* file is the base of the package.__ It is responsible for managing communication with the network nodes and coordinating the execution of quantum protocols. Users will not normally need to modify this file, since __it is designed to work with any quantum protocol implementation.__  To integrate with the controller, protocol scripts must follow some simple rules:
 
@@ -34,7 +34,7 @@ __The *controller.py* file is the base of the package.__ It is responsible for m
     print(json.dumps(result))
     ```
 
-#### Protocol implementations
+### Protocol implementations
 
 The package provides users with two different implementations of BB84, one located in the *bb84_with_eve.py* file and the other corresponding to the *bb84_att.py* file and the rest of the files inside the [Non_ideal_QKDN](https://github.com/Networks-it-uc3m/Quditto/tree/main/qd2_controller/src/qd2_controller/Non_ideal_QKDN) folder.
 
