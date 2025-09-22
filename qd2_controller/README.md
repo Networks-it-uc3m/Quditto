@@ -26,6 +26,7 @@ __The *controller.py* file is the base of the package.__ It is responsible for m
         - *__alice_key__*: refers to the key obtained in the source node of the protocol.
         - *__bob_key__*: refers to the key obtained in the receptor node of the protocol.
         - *__time__*: refers to the simulated time. 
+        
         *__Note:__ This time is generally longer than the duration of the simulation. In other words, a simulator usually takes less time to generate a key than a pair of real quantum nodes. The controller is designed to wait for the correct time returned by the simulation, i.e., it calculates how much time has passed since the simulation started and how much time remains until the simulated time is reached. Once that time has passed, it returns the keys to the nodes, ensuring realistic emulation of the protocol.*
 
     *__Note:__ it is not necessary to generate a JSON file, but the simulation output must be given that format.Users may use the following lines at the end of their script:*
@@ -36,7 +37,7 @@ __The *controller.py* file is the base of the package.__ It is responsible for m
 
 ### Protocol implementations
 
-The package provides users with two different implementations of BB84, one located in the *bb84_with_eve.py* file and the other corresponding to the *bb84_att.py* file and the rest of the files inside the [Non_ideal_QKDN](https://github.com/Networks-it-uc3m/Quditto/tree/main/qd2_controller/src/qd2_controller/Non_ideal_QKDN) folder.
+The package provides users with two different implementations of BB84, one located in the *bb84_with_eve.py* file, and the other corresponding to the *bb84_att.py* file and the rest of the files inside the [Non_ideal_QKDN](https://github.com/Networks-it-uc3m/Quditto/tree/main/qd2_controller/src/qd2_controller/Non_ideal_QKDN) folder.
 
 - __BB84 with Eve:__
     [TO DO]
