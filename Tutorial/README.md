@@ -76,7 +76,7 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
          eavesdropper_parameters:
            eavesdropper_distance: 55
            percentage_intercepted_qubits: 10
-```
+
 
    To create your own Configuration YAML you should:   
    - Update the **IP addresses** to match your device setup.  
