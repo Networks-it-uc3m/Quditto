@@ -7,6 +7,7 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
 ![Quditto tutorial network](Images/quditto_tutorial_network.png)
 
 
+
 ##  Tutorial Setup Steps
 
 1. **Select Devices**  
