@@ -4,7 +4,7 @@ This tutorial is designed to help you create and test your first Quantum Key Dis
 
 A simple three-node topology is used: **B–A–C**, with an **eavesdropper placed between A and C**. The tutorial walks you through several key exchange scenarios to explore both normal operation and compromised links.
 
-![Quditto tutorial network](Images/quditto_tutorial_network.png)
+<img alt="Quditto network" src="Images/quditto_tutorial_network.png" height="100">
 
 
 
