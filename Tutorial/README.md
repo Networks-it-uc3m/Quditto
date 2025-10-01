@@ -16,15 +16,77 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
 
    In the provided YAML example, the controller runs on **node A**.
 
-2. **Edit the Configuration YAML**  
+2. **Create the Configuration YAML**
+   We provide an example Configuration YAML. In it, the controller runs on **node A**.
+
+   ```
+   ---
+quditto_version: 2.0
+config:
+  application_interface: etsi-gs-qkd-014
+  qkd_protocol: bb84
+  controller: A
+  ip_controller: 10.4.48.59
+  netsquid_user: your_user
+  netsquid_pwd: your_pwd
+
+sites:
+  - Sevilla
+  - Malaga
+  - Cadiz
+
+nodes:
+  - node_name: A
+    node_site: Sevilla
+    node_ip: 10.4.48.59
+    neighbour_nodes:
+
+      - name: B
+        link_length: 154
+        protocol: bb84_att.py
+        eavesdropper: False
+
+      - name: C
+        link_length: 100
+        protocol: bb84_with_eve.py
+        eavesdropper: True
+        eavesdropper_parameters:
+          eavesdropper_distance: 45
+          percentage_intercepted_qubits: 10
+
+  - node_name: B
+    node_site: Malaga
+    node_ip: 10.4.48.129
+    neighbour_nodes:
+
+      - name: A
+        link_length: 154
+        protocol: bb84_att.py
+        eavesdropper: False
+
+  - node_name: C
+    node_site: Cadiz
+    node_ip: 10.4.48.188
+    neighbour_nodes:
+
+    - name: A
+      link_length: 100
+      protocol: bb84_with_eve.py
+      eavesdropper: True
+      eavesdropper_parameters:
+        eavesdropper_distance: 55
+        percentage_intercepted_qubits: 10
+```
+
+   To create your own Configuration YAML you should:   
    - Update the **IP addresses** to match your device setup.  
    - Add your **NetSquid credentials** (username and password).
 
-3. **Edit the Inventory YAML**  
+4. **Edit the Inventory YAML**  
    - Update the **IP addresses** again.  
    - Add the **SSH credentials** and the path to the Python interpreter on each device.
 
-4. **Deploy the Orchestrator**  
+5. **Deploy the Orchestrator**  
    - Choose a device connected to the network to act as the orchestrator (it can be one of the nodes).  
    - Clone or copy the Quditto repository to that device.  
    - Navigate to the Quditto folder and run:  
@@ -36,7 +98,7 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
      qd2_orchestrator start config.yaml inventory.yaml
      ```
 
-5. **Run the Test Client**  
+6. **Run the Test Client**  
    - On any terminal with access to the nodes' network (acting as the client), run the test script:
      ```bash
      ./client.sh
