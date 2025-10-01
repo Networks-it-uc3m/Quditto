@@ -1,11 +1,13 @@
 # Quditto Tutorial: Your First QKD Digital Twin Network
 
-This tutorial is designed to help you create and test your first Quantum Key Distribution (QKD) digital twin network using Quditto.
+This tutorial is designed to help you create and test your first Quantum Key Distribution (QKD) digital twin network using Quditto and the *bb84_with_eve.py* script for the implementation of the BB84 protocol.
 
-A simple three-node topology is used: **B–A–C**, with an **eavesdropper placed between A and C**. The tutorial walks you through several key exchange scenarios to explore both normal operation and compromised links.
+You will deploy a simple three-node topology **B–A–C**, with an **eavesdropper placed between A and C**. 
 
 <img alt="Quditto network" src="../Images/quditto_tutorial_network.png" height="100">
 
+
+The tutorial walks you through several key exchange scenarios to explore both normal operation and compromised links.
 
 
 ##  Tutorial Setup Steps
@@ -16,7 +18,7 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
 
    In the provided YAML example, the controller runs on **node A**.
 
-2. **Create the Configuration YAML**
+2. **Create the Configuration YAML**  
    We provide an example Configuration YAML. In it, the controller runs on **node A**.
 
    ```
@@ -81,12 +83,40 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
    To create your own Configuration YAML you should:   
    - Update the **IP addresses** to match your device setup.  
    - Add your **NetSquid credentials** (username and password).
+  
+   You can also change the rest of parameters to modify however you want the link lengths, the distance from the nodes to the eavesdropper or the percentage of qubits that the eavesdropper intercepts. 
 
-4. **Edit the Inventory YAML**  
-   - Update the **IP addresses** again.  
-   - Add the **SSH credentials** and the path to the Python interpreter on each device.
+4. **Create the Inventory YAML**  
+   We also provide an Inventory YAML example:
+   ```
+   ---
+   all:
+     hosts:
+       A:
+         ansible_host: 10.4.48.59
+         ansible_connection: ssh
+         ansible_user: ubuntu
+         ansible_ssh_pass: ubuntu
+         py_env: /home/ubuntu/.local/lib/python3.10
+       B:
+         ansible_host: 10.4.48.129
+         ansible_connection: ssh
+         ansible_user: ubuntu
+         ansible_ssh_pass: ubuntu
+         py_env: /home/ubuntu/.local/lib/python3.10
+       C:
+         ansible_host: 10.4.48.188
+         ansible_connection: ssh
+         ansible_user: ubuntu
+         ansible_ssh_pass: ubuntu
+         py_env: /home/ubuntu/.local/lib/python3.10
+   ```
 
-5. **Deploy the Orchestrator**  
+   You should adapt it to reflect your configuration by:
+   - Updating the **IP addresses** again.  
+   - Adding the **SSH credentials** and the path to the Python interpreter on each device.
+
+6. **Deploy the Orchestrator**  
    - Choose a device connected to the network to act as the orchestrator (it can be one of the nodes).  
    - Clone or copy the Quditto repository to that device.  
    - Navigate to the Quditto folder and run:  
@@ -98,36 +128,68 @@ A simple three-node topology is used: **B–A–C**, with an **eavesdropper plac
      qd2_orchestrator start config.yaml inventory.yaml
      ```
 
-6. **Run the Test Client**  
-   - On any terminal with access to the nodes' network (acting as the client), run the test script:
-     ```bash
-     ./client.sh
-     ```
+Once these steps are completed, your QKD Network is configured and ready to receive key requests. 
 
-
-##  What Happens During the Tutorial
+##  Requesting and retrieving keys
 
 ### 1.  Key Exchange: Node A ↔ Node B
 
-- A key request is initiated to **node A** for a key with **node B**.
-- You retrieve the key and the **key ID** from A.
-- Using the key ID, you retrieve the same key from **node B**. If both keys match, the exchange was successful and **no eavesdropping** occurred.
-- Then, you try retrieving a key from **B using a fake key ID**. This should fail, confirming the system validates key identifiers.
+First, you will request **node A** for a 512 bit key shared with **node B**. To do so, run on any terminal with access to the nodes' network (that will act as the client terminal) the following command making sure you change the IP for your node A's IP:
+
+```bash
+     curl http://<NODE_A_IP>:8000/api/v1/keys/B/enc_keys?size=512
+```
+
+You should get as a response the key and its corresponding key ID. Using the key ID, you can retrieve the same key from **node B**:
+
+```bash
+     curl http://<NODE_B_IP>:8000/api/v1/keys/A/dec_keys?key_ID=<KEY_ID_AB>
+```
+
+You should again get as a response the key and the key ID. You can check that both keys match, meaning that the exchange was successful and **no eavesdropping** occurred.
+
+You could also try retrieving a key from **B using a fake key ID**. This should fail, confirming the system validates key identifiers.
 
 
 ### 2.  Eavesdropped Exchange: Node A ↔ Node C
 
-- A key request is initiated to **node C** for a key with **node A**.
-- You retrieve the key and key ID from C.
-- Using the key ID, you retrieve the key from **A**. The two keys **do not match**, indicating the presence of an **eavesdropper** on the A–C link.
+Now you will request **node C** for a key with **node A**. Keep in mind that according to the network you configured, there's an eavesdropper in this link. 
+
+```bash
+     curl http://<NODE_C_IP>:8000/api/v1/keys/A/enc_keys?size=512
+```
+
+Using the key ID from the response, you can retrieve the key from **A**.
+
+```bash
+     curl http://<NODE_A_IP>:8000/api/v1/keys/C/dec_keys?key_ID=<KEY_ID_CA>
+```
+
+This time, if you compare the two keys, you should see that they **do not match**, indicating the presence of an **eavesdropper** on the A–C link.
 
 
 
 ### 3.  Non-Neighbor Exchange: Node B ↔ Node C
 
-- You try to initiate key requests between **nodes B and C** (both directions). The system replies that **no such neighbor exists**.
+Finally, you can try to initiate a key request between **nodes B and C**, that according to the network you configured are not neighbours:
+
+```bash
+     curl http://<NODE_B_IP>:8000/api/v1/keys/C/enc_keys?size=512
+```
+
+You should see that the system replies that **no such neighbor exists**, with a response like:
+
+```bash
+"{'message': 'Invalid partner requested.', 'details': 'The nodes are not neighbours'}"
+```
+
 >  *Note: This limitation can be addressed by implementing a Key Management Entity (KME) script that performs quantum key relaying via node A as a trusted node, but this is not directly supported by Quditto.*
 
 
-
+##  Automatic test
+If you want to automatically test the network you can run the test script on any terminal with access to the nodes' network with: 
+     ```bash
+     ./client.sh
+     ```
+This script performs all the requests and comprobations explained in the previous section.
 
