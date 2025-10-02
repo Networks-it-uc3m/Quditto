@@ -117,9 +117,7 @@ The tutorial walks you through several key exchange scenarios to explore both no
    - Adding the **SSH credentials** and the path to the Python interpreter on each device.
 
 6. **Deploy the Orchestrator**  
-   - Choose a device connected to the network to act as the orchestrator (it can be one of the nodes).  
-   - Clone or copy the Quditto repository to that device.  
-   - Navigate to the Quditto folder and run:  
+   - Choose a device connected to the network to act as the orchestrator (it can be one of the nodes) and run:  
      ```bash
      pip install qd2_orchestrator
      ```
