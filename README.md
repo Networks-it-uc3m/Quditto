@@ -140,7 +140,7 @@ __From this point on, the digital twin of the QKD network is operational to run 
 
 ## Contact
 
-If you have any doubts or feedback, please feel free to contact us through e-mail. We are more than happy to help and hear ideas for improving the platform :).
+If you have any doubts or feedback, please feel free to contact us through e-mail. We are more than happy to help and hear ideas for improving the platform :)
 
 - Blanca Lopez: blanca.lopez@networks.imdea.org (IMDEA Networks - Universidad Carlos III de Madrid)
 - Ángela Díaz-Bricio: angela.diaz@networks.imdea.org (IMDEA Networks - Universidad Carlos III de Madrid)
@@ -154,4 +154,5 @@ If you have any doubts or feedback, please feel free to contact us through e-mai
 This platform has been developed under the MADQuantum-CM project, funded by the Regional Government of Madrid, the Spanish State through the Recovery, Transformation and Resilience Plan, and the European Union through the NextGeneration EU funds, the project 6GINSPIRE PID2022-137329OB-C42, funded by MCIN/AEI/10.13039/501100011033/, and the EU Horizon Europe project Quantum Security Networks Partnership (QSNP), under grant 101114043.
 
 ### Other projects where Quditto has been used
+
 
