@@ -395,8 +395,8 @@ def main():
     with open(params, "r") as f:
         PARAMETER_VALUES = yaml.safe_load(f)
 
-    distance_to_alice = PARAMETER_VALUES["eavesdropper_distance"]
-    percentage = PARAMETER_VALUES["percentage_intercepted_qubits"]
+    distance_to_alice = PARAMETER_VALUES.get("eavesdropper_distance",0)
+    percentage = PARAMETER_VALUES.get("percentage_intercepted_qubits",0)
     
     alice_final_key, bob_final_key, qber, simulated_time, repetitions = bb84_key_perc(desired_key_length, link_length, distance_to_alice, percentage)
 
