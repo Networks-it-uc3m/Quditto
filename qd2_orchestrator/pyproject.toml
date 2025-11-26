@@ -4,16 +4,20 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qd2_orchestrator"
-version = "2.1.2"
+version = "2.1.3"
 description = "The Quditto orchestrator"
-authors = [  {name="Blanca Lopez", email="blanca.lopez@imdea.org"}, {name="Angela Diaz", email="angela.diaz@imdea.org"},{ name="Javier Perez", email="javier.perez@imdea.org"},]
+authors = [  {name="Blanca Lopez", email="blanca.lopez@imdea.org"}, {name="Angela Diaz", email="angela.diaz@imdea.org"},{ name="Javier Perez", email="javier.perez@imdea.org"},{ name="Borja Nogales", email="bdorado@pa.uc3m.es"},]
 requires-python = ">=3.8"
-dependencies = [ 
+dependencies = [
     "click", 
     "pyyaml",
     "ansible",
     "ansible_runner",
-    "ansible-core"
+    "ansible-core",
+    "typer>=0.12",
+    "rich>=13.0",
+    "pydantic>=2.7",
+    "kubernetes>=29.0.0"
 ]
 
 [project.scripts]

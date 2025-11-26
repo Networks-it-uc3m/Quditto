@@ -2,6 +2,10 @@ import click
 from .orchestratorlib import *
 import yaml
 
+# --- Integratrion of qd2_bootstrap based on Typer---
+import typer
+from qd2_bootstrap.cli import app as bootstrap_typer_app
+
 #  Definition of the CLI commands
 @click.group()
 def cli():
@@ -15,7 +19,7 @@ def cli():
 @click.argument('inv_file', required=True, type=click.File(mode='r'))
 
 def start(config_file, inv_file):
-    """execute an emulated QKD network based on a configuration file (yaml)"""
+    """ Execute an emulated QKD network based on a configuration file (yaml)"""
 
     yaml_config_file = yaml.safe_load(config_file.read())
     yaml_inv_file =  yaml.safe_load(inv_file.read())
@@ -50,6 +54,20 @@ def available_scripts(config_file, inv_file):
     scripts = get_scripts(config_file=yaml_config_file, inv_file=yaml_inv_file)
     print('The available simulation scripts are:')
     print(*scripts, sep='\n')
+
+
+# add the cli app of qd2_bootstrap into qd2_porchestrator cli
+bootstrap_click_cmd = typer.main.get_command(bootstrap_typer_app)
+bootstrap_click_cmd.help = (
+    "Automatically provisions edge and cloud infrastructure "
+    "to host a Quditto deployment."
+)
+bootstrap_click_cmd.short_help = (
+    "Provision edge and/or cloud infrastructure for Quditto"
+)
+
+cli.add_command(bootstrap_click_cmd, "bootstrap")
+
 
 
 if __name__ == "__main__":
