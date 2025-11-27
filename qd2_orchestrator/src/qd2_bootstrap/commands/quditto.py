@@ -21,9 +21,8 @@ from qd2_bootstrap.models.quditto_deploy_spec import (
 from qd2_bootstrap.utils.helm import HelmClient
 from qd2_bootstrap.utils.mapping import map_component_values
 
-# IMPORTANT: use your actual helper for turning dict values into --set expressions.
-# If your helper is named differently, adapt the import accordingly.
-from qd2_bootstrap.utils.helm_set import dict_to_set_list  # <-- ensure this exists
+from qd2_bootstrap.utils.helm_set import dict_to_set_list  
+from qd2_bootstrap.utils.kubectl import Kubectl
 
 
 app = typer.Typer(no_args_is_help=True)
@@ -257,3 +256,114 @@ def teardown(
                 raise typer.Exit(code=rc)
 
     rprint("\n[green]Quditto teardown completed.[/]")
+
+# -----------------------------------------------------------------------------
+# quditto status
+# -----------------------------------------------------------------------------
+@app.command()
+def status(
+    file: Path = typer.Option(..., "-f", "--file", exists=True, readable=True, help="Quditto multi/single cluster spec YAML"),
+    kubeconfig: Optional[Path] = typer.Option(None, "--kubeconfig", help="(single-cluster) kubeconfig path"),
+    namespace: Optional[str] = typer.Option(None, "--namespace", help="Override namespace (spec.namespace default)"),
+    multi_cluster: bool = typer.Option(False, "--multi-cluster/--no-multi-cluster", help="Enable multi-cluster mode"),
+):
+    """
+    Show the runtime status of Quditto components:
+
+      - Per component (release): chart, pod phase/ready, node name and node IP.
+      - NodePort services: list of NodePorts exposed by each component.
+    """
+    # 1) Load and validate spec
+    try:
+        data = yaml.safe_load(file.read_text())
+        spec = QudittoDeploySpec.model_validate(data)
+    except Exception as e:
+        rprint(f"[bold red]Spec validation error:[/] {e}")
+        raise typer.Exit(code=2)
+
+    ns = (namespace or spec.namespace or "default").strip()
+
+    # 2) Group components by target cluster
+    grouped = _collect_components(spec, multi_cluster=multi_cluster, kubeconfig=kubeconfig)
+    if not grouped:
+        rprint("[yellow]Nothing to show: no components present in spec.[/]")
+        raise typer.Exit(code=0)
+
+    # 3) For each cluster, query pods + services via kubectl and print a table
+    for (cluster_name, kc_path), items in grouped.items():
+        rprint(f"\n[bold cyan]Cluster:[/] {cluster_name}  [dim]({kc_path})[/]  Namespace: [magenta]{ns}[/]")
+
+        kubectl = Kubectl(kubeconfig=kc_path)
+
+        table = Table(
+            title=f"Quditto status → cluster: {cluster_name}",
+            box=box.SIMPLE,
+            show_header=True,
+            header_style="bold",
+        )
+        table.add_column("Component")        # Helm release name
+        table.add_column("Chart")
+        table.add_column("Pod")
+        table.add_column("Phase/Ready")
+        table.add_column("Node")
+        table.add_column("Node IP")
+        table.add_column("NodePorts")
+
+        for release_name, comp in items:
+            chart_ref = comp.chart if comp.chart.startswith("quditto/") else f"quditto/{comp.chart}"
+
+            pods = kubectl.pods_by_app(ns, release_name)
+            svc_obj = kubectl.service(ns, release_name)
+            nodeports = Kubectl.nodeports(svc_obj)
+
+            if nodeports:
+                nodeports_str = ", ".join(
+                    f'{p.get("name") or "-"}:{p["nodePort"]}'
+                    for p in nodeports
+                )
+            else:
+                nodeports_str = "-"
+
+            if not pods:
+                # No pods found for this release
+                table.add_row(
+                    release_name,
+                    chart_ref,
+                    "-",
+                    "NotFound",
+                    "-",
+                    "-",
+                    nodeports_str,
+                )
+                continue
+
+            # One row per pod
+            for pod in pods:
+                phase = pod.get("status", {}).get("phase", "Unknown")
+                ready = Kubectl.pod_ready(pod)
+                phase_ready = f"{phase}/{ready}"
+
+                # ← el nodo viene en spec.nodeName, no en status
+                node_name = pod.get("spec", {}).get("nodeName")
+                node_ip = "-"
+                if node_name:
+                    node_obj = kubectl.node(node_name)
+                    if node_obj:
+                        node_ip = Kubectl.node_ip(node_obj) or "-"
+
+                table.add_row(
+                    release_name,
+                    chart_ref,
+                    pod.get("metadata", {}).get("name", "-"),
+                    phase_ready,
+                    node_name or "-",
+                    node_ip,
+                    nodeports_str,
+                )
+
+
+        rprint(table)
+        rprint(
+            "[dim]Hint: You can reach SSH/HTTP endpoints via node external IPs, e.g. "
+            "ssh user@<node-ip> -p <nodePort>[/]"
+        )
