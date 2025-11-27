@@ -4,9 +4,24 @@ from qd2_bootstrap.commands import infra, cluster, quditto
 from qd2_bootstrap.utils import deps_installer
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
-app.add_typer(infra.app, name="infra")
-app.add_typer(cluster.app, name="cluster")
-app.add_typer(quditto.app, name="quditto")
+app.add_typer(infra.app, name="infra", 
+    help=(
+        "Provision cloud infrastructure as virtual machines in an OpenStack "
+        "environment using Terraform."
+    )
+)
+app.add_typer(cluster.app, name="cluster",
+    help=(
+        "Install and configure kubeadm-based k8s clusters on SSH-accessible machines "
+        "using KubeOne"
+    )
+)
+app.add_typer(quditto.app, name="quditto", 
+    help=(
+        "Deploy tailored Quditto-related k8s artifacts (pods, services, etc.) "
+        "to prepare subsequent quditto orchestration."
+    )
+)
 
 
 @app.callback()

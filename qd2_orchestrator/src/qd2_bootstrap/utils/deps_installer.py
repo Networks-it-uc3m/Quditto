@@ -91,7 +91,7 @@ def install_kubectl(arch: str) -> None:
         'sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && '
 
         # 5) Clean up checksum file
-        'rm kubectl.sha256 && '
+        'rm -f kubectl kubectl.sha256 && '
 
         # 6) Show the installed client version
         'kubectl version --client'
