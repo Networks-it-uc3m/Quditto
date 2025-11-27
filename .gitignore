@@ -1,30 +1,40 @@
-# --------------------
-# macOS
-# --------------------
+# --- macOS ---
 .DS_Store
 
-# --------------------
-# Python
-# --------------------
+# --- Python ---
 __pycache__/
 *.py[cod]
 
-# --------------------
-# Virtual environments
-# --------------------
+# --- Virtual environments ---
 .venv/
 venv/
 env/
 
-# --------------------
-# IDEs / Editors
-# --------------------
+# --- IDEs / Editors ---
 .vscode/
 .idea/
 
-# --------------------
-# Pytest / coverage
-# --------------------
+# --- Pytest / coverage ---
 .pytest_cache/
 .coverage
 htmlcov/
+
+# --- Archivos sensibles / kubeconfigs --- 
+*.kubeconfig
+*kubeconfig
+qd2_bootstrap_cli/clusters/*/kubeconfig
+test-infra.yaml
+test-k8s-deploy.yaml
+test-qd2-deploy.yaml
+
+# --- Terraform (workdir generado por la CLI) ---
+*.tf-build/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

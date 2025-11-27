@@ -60,6 +60,21 @@ resource "openstack_compute_instance_v2" "cp" {
   flavor_name = var.flavor_name
   key_pair    = var.keypair_name
 
+
+  # Enable cloud-init via config drive (often required in OpenStack)
+  config_drive = true
+
+  # Enable ubuntu/ubuntu password and SSH password auth via cloud-init
+  user_data = <<-EOF
+#cloud-config
+ssh_pwauth: True
+chpasswd:
+  list: |
+    ubuntu:ubuntu
+  expire: False
+EOF
+
+
   network {
     uuid = var.network_uuid
   }
@@ -74,6 +89,20 @@ resource "openstack_compute_instance_v2" "worker" {
   image_name  = var.image_name
   flavor_name = var.flavor_name
   key_pair    = var.keypair_name
+
+
+  # Enable cloud-init via config drive (often required in OpenStack)
+  config_drive = true
+
+  # Enable ubuntu/ubuntu password and SSH password auth via cloud-init
+  user_data = <<-EOF
+#cloud-config
+ssh_pwauth: True
+chpasswd:
+  list: |
+    ubuntu:ubuntu
+  expire: False
+EOF
 
   network {
     uuid = var.network_uuid

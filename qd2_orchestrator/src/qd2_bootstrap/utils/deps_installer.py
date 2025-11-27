@@ -1,6 +1,7 @@
 import platform
 import shutil
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from typing import List
 
@@ -27,6 +28,10 @@ REQUIRED_TOOLS: List[Tool] = [
     Tool(
         name="subctl",
         description="Submariner CLI for multi-cluster networking",
+    ),
+    Tool(
+        name="kubeone",
+        description="KubeOne Kubernetes cluster lifecycle manager",
     ),
 ]
 
@@ -139,6 +144,29 @@ def install_terraform() -> None:
     _run_shell(cmd)
 
 
+def install_kubeone() -> None:
+    """
+    Install KubeOne using the official installer script.
+
+    The script installs the KubeOne binary into /usr/local/bin and
+    unpacks example files into the working directory, so we run it
+    inside a temporary directory to avoid polluting the user's cwd.
+    """
+    with tempfile.TemporaryDirectory() as tmpdir:
+        cmd = f"cd {tmpdir} && curl -sfL get.kubeone.io | sh"
+        _run_shell(cmd)
+
+    kubeone_path = Path("/usr/local/bin/kubeone")
+    if not kubeone_path.exists():
+        raise RuntimeError(
+            "kubeone installation finished but binary was not found at "
+            "/usr/local/bin/kubeone"
+        )
+
+    print("[+] kubeone installed at /usr/local/bin/kubeone")
+
+    # Optional sanity check
+    _run_shell("kubeone version")
 
 from pathlib import Path
 import os
@@ -199,5 +227,7 @@ def install_tool(tool: Tool, arch: str) -> None:
         install_terraform()
     elif tool.name == "subctl":
         install_subctl()
+    elif tool.name == "kubeone":
+        install_kubeone()  
     else:
         raise RuntimeError(f"No installer defined for tool: {tool.name}")
