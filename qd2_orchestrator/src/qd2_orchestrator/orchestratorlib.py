@@ -53,21 +53,6 @@ install_controller_play = [
                     "dest": "{{py_env}}/site-packages/qd2_controller/quditto_v2.yaml",
                     "content": ""
                 }
-            },
-            {
-                "name": "Copy RabbitMQ installation file",
-                "ansible.builtin.copy":{
-                    "src": "{{py_env}}/site-packages/qd2_orchestrator/rabbit_mq_installation.sh",
-                    "dest": "{{py_env}}/site-packages/qd2_controller/rabbit_mq_installation.sh"
-                }
-            },
-            {
-                "name": "Make script executable",
-                "become": True,
-                "shell":{
-                    "chdir": "{{py_env}}/site-packages/qd2_controller",
-                    "cmd": "chmod +x rabbit_mq_installation.sh"
-                }
             }
             ]
     }
@@ -101,10 +86,19 @@ configuring_rmq_play = [
     "become": True,
     "tasks":[
         {
-            "name": "Install Rabbit MQ",
-            "shell":{
-                "chdir": "{{py_env}}/site-packages/qd2_controller",
-                "cmd": "bash rabbit_mq_installation.sh"
+            "name": "Install rabbitmq-server",
+            "apt": {
+                "name": "rabbitmq-server", "state": "present", "update_cache": True,
+                }      
+        },
+        {
+            "name": "Start RabbitMQ server if not running",
+            "shell": {
+                "cmd": (
+                    "if ! rabbitmqctl status >/dev/null 2>&1; then "
+                    "RABBITMQ_NODENAME='rabbit@$(hostname)' rabbitmq-server -detached; "
+                    "fi"
+                )
             }
         },
         {
@@ -234,6 +228,21 @@ get_simulation_scripts_play = [
 ]
 
 
+# Simple SSH connectivity check: try to run a no-op command on all hosts of the inventory.
+ssh_health_check_play = [
+    {
+        "name": "SSH connectivity check",
+        "hosts": "all",
+        "gather_facts": False,
+        "tasks": [
+            {
+                "name": "Run noop command",
+                "ansible.builtin.command": "true",
+            }
+        ],
+    }
+]
+
 
 
 #Ancilliary functions to fill the plays
@@ -272,15 +281,39 @@ def get_controller_init_play(host):
     play[0]["hosts"] = host
     return play
 
+def wait_for_ssh(inv_file, retries=5, delay=5):
+    """
+    Wait until Ansible can run a simple command on all hosts via SSH,
+    or fail after N retries.
+
+    inv_file: inventory dict loaded from YAML (same type the CLI passes).
+    """
+    print(f"Checking SSH connectivity to all hosts (up to {retries} attempts)...")
+    for attempt in range(1, retries + 1):
+        r = ansible_runner.run(
+            playbook=ssh_health_check_play,
+            inventory=inv_file,
+            quiet=True,
+        )
+
+        # ansible-runner exposes rc: 0 = success
+        if getattr(r, "rc", 0) == 0:
+            print(f"SSH connectivity ok on attempt {attempt}.")
+            return
+
+        print(f"Attempt {attempt} failed, retrying in {delay} seconds...")
+        time.sleep(delay)
+
+    print("ERROR: SSH connectivity to some hosts failed after all retries.")
+    sys.exit(1)
 
 
 
 #Complete functions
 
 def install(config_file, inv_file):
-    # Added a small delay to ensure that the virtual node is up
-    print('Sleeping to avoid errors in the Ansible ssh connection....')
-    time.sleep(30)
+    # wait until SSH is actually ready on all hosts
+    wait_for_ssh(inv_file)
 
     ansible_runner.run(playbook = install_node_play, inventory = inv_file)
 
