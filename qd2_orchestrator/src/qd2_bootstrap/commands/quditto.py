@@ -304,6 +304,7 @@ def status(
         table.add_column("Component")        # Helm release name
         table.add_column("Chart")
         table.add_column("Pod")
+        table.add_column("Pod IP")
         table.add_column("Phase/Ready")
         table.add_column("Node")
         table.add_column("Node IP")
@@ -327,23 +328,26 @@ def status(
             if not pods:
                 # No pods found for this release
                 table.add_row(
-                    release_name,
-                    chart_ref,
-                    "-",
-                    "NotFound",
-                    "-",
-                    "-",
-                    nodeports_str,
+                    release_name,   # Component
+                    chart_ref,      # Chart
+                    "-",            # Pod
+                    "-",            # Pod IP
+                    "NotFound",     # Phase/Ready
+                    "-",            # Node
+                    "-",            # Node IP
+                    nodeports_str,  # NodePorts
                 )
                 continue
 
             # One row per pod
             for pod in pods:
+                pod_name = pod.get("metadata", {}).get("name", "-")
+                pod_ip = pod.get("status", {}).get("podIP") or "-"
+
                 phase = pod.get("status", {}).get("phase", "Unknown")
                 ready = Kubectl.pod_ready(pod)
                 phase_ready = f"{phase}/{ready}"
 
-                # ← el nodo viene en spec.nodeName, no en status
                 node_name = pod.get("spec", {}).get("nodeName")
                 node_ip = "-"
                 if node_name:
@@ -352,14 +356,17 @@ def status(
                         node_ip = Kubectl.node_ip(node_obj) or "-"
 
                 table.add_row(
-                    release_name,
-                    chart_ref,
-                    pod.get("metadata", {}).get("name", "-"),
-                    phase_ready,
-                    node_name or "-",
-                    node_ip,
-                    nodeports_str,
+                    release_name,        # Component
+                    chart_ref,           # Chart
+                    pod_name,            # Pod
+                    pod_ip,              # Pod IP
+                    phase_ready,         # Phase/Ready
+                    node_name or "-",    # Node
+                    node_ip,             # Node IP
+                    nodeports_str,       # NodePorts
                 )
+
+
 
 
         rprint(table)

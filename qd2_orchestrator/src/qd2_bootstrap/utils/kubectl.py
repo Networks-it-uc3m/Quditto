@@ -53,11 +53,43 @@ class Kubectl:
     # helpers for Quditto status
     # ------------------------------------------------------------------
     def pods_by_app(self, namespace: str, app: str) -> List[dict]:
-        """Return pod objects (raw) matching label app=<app>."""
-        data = self._run_json(
-            ["get", "pods", "-n", namespace, "-l", f"app={app}", "-o", "json"]
-        )
-        return data.get("items", []) if data else []
+        """
+        Return pod objects (raw) associated with a given Helm release / app name.
+
+        Strategy:
+          1) Try label: app.kubernetes.io/instance=<app>  (standard Helm)
+          2) Fallback:  app=<app>
+          3) Fallback:  pods whose name starts with '<app>-'
+        """
+        # 1) Try common label selectors
+        selectors = [
+            f"app.kubernetes.io/instance={app}",
+            f"app={app}",
+        ]
+
+        for sel in selectors:
+            data = self._run_json(
+                ["get", "pods", "-n", namespace, "-l", sel, "-o", "json"]
+            )
+            if data:
+                items = data.get("items", [])
+                if items:
+                    return items
+
+        # 2) Fallback: list all pods and filter by name prefix
+        data = self._run_json(["get", "pods", "-n", namespace, "-o", "json"])
+        if not data:
+            return []
+
+        items = data.get("items", [])
+        matched = [
+            p
+            for p in items
+            if p.get("metadata", {}).get("name", "").startswith(f"{app}-")
+        ]
+        return matched
+
+
 
     def service(self, namespace: str, name: str) -> Optional[dict]:
         """Return a Service object (raw JSON) or None."""
