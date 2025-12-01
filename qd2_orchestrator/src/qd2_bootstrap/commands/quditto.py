@@ -266,12 +266,26 @@ def status(
     kubeconfig: Optional[Path] = typer.Option(None, "--kubeconfig", help="(single-cluster) kubeconfig path"),
     namespace: Optional[str] = typer.Option(None, "--namespace", help="Override namespace (spec.namespace default)"),
     multi_cluster: bool = typer.Option(False, "--multi-cluster/--no-multi-cluster", help="Enable multi-cluster mode"),
+
+    ansible_inventory: Optional[Path] = typer.Option(
+        None,
+        "--ansible-inventory",
+        help="Write an Ansible inventory YAML with SSH access info "
+             "(use '-' to print to stdout)",
+    ),
+    ansible_user: str = typer.Option("quditto", help="Ansible SSH user"),
+    ansible_pass: str = typer.Option("quditto", help="Ansible SSH password"),
+    py_env: str = typer.Option(
+        "/home/quditto/.local/lib/python3.10",
+        help="Python environment path on remote hosts",
+    ),
 ):
     """
     Show the runtime status of Quditto components:
 
       - Per component (release): chart, pod phase/ready, node name and node IP.
       - NodePort services: list of NodePorts exposed by each component.
+      - Optionally: generate an Ansible inventory for SSH access (--ansible-inventory).
     """
     # 1) Load and validate spec
     try:
@@ -288,6 +302,15 @@ def status(
     if not grouped:
         rprint("[yellow]Nothing to show: no components present in spec.[/]")
         raise typer.Exit(code=0)
+
+    # Optional: structure to accumulate Ansible inventory across all clusters
+    inventory: Optional[Dict[str, Any]] = None
+    if ansible_inventory is not None:
+        inventory = {
+            "all": {
+                "hosts": {}
+            }
+        }
 
     # 3) For each cluster, query pods + services via kubectl and print a table
     for (cluster_name, kc_path), items in grouped.items():
@@ -324,6 +347,14 @@ def status(
                 )
             else:
                 nodeports_str = "-"
+
+            # Extra: si vamos a generar inventario, intenta localizar el NodePort "ssh"
+            ssh_port: Optional[int] = None
+            if inventory is not None and nodeports:
+                for p in nodeports:
+                    if p.get("name") == "ssh" and "nodePort" in p:
+                        ssh_port = p["nodePort"]
+                        break
 
             if not pods:
                 # No pods found for this release
@@ -366,11 +397,34 @@ def status(
                     nodeports_str,       # NodePorts
                 )
 
-
-
+                # Rellenar inventario Ansible solo una vez por componente
+                if inventory is not None and ssh_port and node_ip and release_name not in inventory["all"]["hosts"]:
+                    inventory["all"]["hosts"][release_name] = {
+                        "ansible_host": node_ip,
+                        "ansible_port": ssh_port,
+                        "ansible_user": ansible_user,
+                        "ansible_ssh_pass": ansible_pass,
+                        "ansible_connection": "ssh",
+                        "py_env": py_env,
+                    }
 
         rprint(table)
         rprint(
             "[dim]Hint: You can reach SSH/HTTP endpoints via node external IPs, e.g. "
             "ssh user@<node-ip> -p <nodePort>[/]"
         )
+
+    # 4) If requested, write/print Ansible inventory
+    if inventory is not None:
+        # Limpiar inventario vacío (p.ej. si no había NodePorts ssh)
+        if not inventory["all"]["hosts"]:
+            rprint("[yellow]No SSH-capable components (with 'ssh' NodePort) found to build Ansible inventory.[/]")
+            return
+
+        # stdout si el path es "-"
+        if str(ansible_inventory) == "-":
+            rprint("\n[bold cyan]Generated Ansible inventory:[/]")
+            print(yaml.safe_dump(inventory, sort_keys=False))
+        else:
+            ansible_inventory.write_text(yaml.safe_dump(inventory, sort_keys=False))
+            rprint(f"\n[green]Ansible inventory written to {ansible_inventory}[/]")
