@@ -23,18 +23,32 @@ app = FastAPI(lifespan=lifespan)
 class Mensaje(BaseModel):
     texto: str
 
-@app.get("/api/v1/keys/{slave_SAE_ID}/enc_keys")
-def get_key(slave_SAE_ID: str, size: str):
+@app.get("/api/v1/keys/QKD/{slave_SAE_ID}/enc_keys")
+def get_key_QKD(slave_SAE_ID: str, size: str):
 
-    result = str(functions.get_key(node,slave_SAE_ID,size))
+    result = str(functions.get_key_QKD(node,slave_SAE_ID,size))
+    
+    return {result}
+
+@app.get("/api/v1/keys/PQC/{slave_IP}/enc_keys")
+def get_key_PQC(slave_IP: str):
+
+    result = str(functions.get_key_PQC(slave_IP))
     
     return {result}
 
 
-@app.get("/api/v1/keys/{master_SAE_ID}/dec_keys")
-def get_key_with_ID(master_SAE_ID: str, key_ID: str):
+@app.get("/api/v1/keys/QKD/{master_SAE_ID}/dec_keys")
+def get_key_with_ID_QKD(master_SAE_ID: str, key_ID: str):
 
-    result = str(functions.get_key_with_ID(node,master_SAE_ID,key_ID))
+    result = str(functions.get_key_with_ID_QKD(node,master_SAE_ID,key_ID))
+    
+    return {result}
+
+@app.get("/api/v1/keys/PQC/{master_IP}/dec_keys")
+def get_key_with_ID_PQC(master_IP: str, key_ID: str):
+
+    result = str(functions.get_key_with_ID_PQC(master_IP,key_ID))
     
     return {result}
 
