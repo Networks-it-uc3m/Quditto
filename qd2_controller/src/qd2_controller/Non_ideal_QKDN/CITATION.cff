@@ -1,0 +1,26 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Non-ideal-QKDNs
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Andrés
+    family-names: Martín Megino
+    email: martinmeginoa@gmail.com
+    affiliation: UC3M - IMDEA Networks
+repository-code: 'https://github.com/amartin-m/Non-ideal-QKDNs'
+abstract: >-
+  Using NetSquid and other third-party python libraries, we
+  provide a framework for simulating non ideal quantum
+  communications and quantum cryptographic protocols.
+keywords:
+  - Quantum key distribution
+  - Quantum networks
+license: MIT
+commit: 1729e3c2cdbf5ac5308e77c0f5001164aac8e1e0
+version: 1.0.0
+date-released: '2025-06-02'
