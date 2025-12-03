@@ -3,14 +3,15 @@ import sys
 import ansible_runner
 import json
 import time
+import copy
 
 #Definition of the different ansible plays.
 
-## Installation of the qd2 node package in every node.
+## Installation of the qd2 node package in every qd2_node (qkd or pqc).
 install_node_play = [
     {
-        "name": "Installation of QKD node software",
-        "hosts": "all",
+        "name": "Installation of qd2 node software",
+        "hosts": "qd2_nodes",
         "tasks":
         [
             {
@@ -23,7 +24,15 @@ install_node_play = [
             {
                 "name": "Installing QKD node",
                 "become": "false",
-                "shell": "/usr/bin/pip install qd2_node"
+                "shell": (
+                    "/usr/bin/pip install "
+                    "{% if qd2_node_use_testpypi | default(false) | bool %}"
+                    "--index-url https://test.pypi.org/simple "
+                    "--extra-index-url https://pypi.org/simple "
+                    "{% endif %}"
+                    "{{ qd2_node_package_name | default('qd2-node') }}"
+                    "{% if qd2_node_version is defined and qd2_node_version %}=={{ qd2_node_version }}{% endif %}"
+                )
             }
         ]
     }
@@ -37,6 +46,13 @@ install_controller_play = [
         "hosts": "",
         "tasks":
         [
+            {
+                "name": "Install pip",
+                "become": True,
+                "apt": "name=python3-pip state=present update_cache=true",
+                "retries": "5",
+                "delay": "30"
+            },
             {
                 "name": "Installing Netsquid",
                 "become": "false",
@@ -58,17 +74,17 @@ install_controller_play = [
     }
 ]
 
-## Provisioning of the configuration file and the RabbitMQ installation script to all the nodes.
+## Provisioning of the configuration file to qd2_nodes installation script to all the nodes.
 provisioning_play = [
 {
-    "name": "Provisioning",
-    "hosts": "all",
+    "name": "Provisioning config file into the qd2_nodes",
+    "hosts": "",
     "become": True,
     "tasks":[
         {
             "name": "Copy confguration file",
              "copy":{
-                "dest": "{{py_env}}/site-packages/qd2_node/quditto_v2.yaml",
+                "dest": "",
                 "content": ""
             }
         }
@@ -250,8 +266,8 @@ ssh_health_check_play = [
 def get_controller_play(host, ns_user, ns_pwd, content):
     play = install_controller_play
     play[0]["hosts"] = host
-    play[0]["tasks"][0]["shell"] = "/usr/bin/pip install --user --extra-index-url https://"+str(ns_user)+":"+str(ns_pwd)+"@pypi.netsquid.org netsquid"
-    play[0]["tasks"][2]["copy"]["content"] = content
+    play[0]["tasks"][1]["shell"] = "/usr/bin/pip install --user --extra-index-url https://"+str(ns_user)+":"+str(ns_pwd)+"@pypi.netsquid.org netsquid"
+    play[0]["tasks"][3]["copy"]["content"] = content
     return play
 
 def get_rmq_play(host):
@@ -259,8 +275,14 @@ def get_rmq_play(host):
     play[0]["hosts"] = host
     return play
 
-def get_provisioning_play(content):
-    play = provisioning_play
+def get_provisioning_play(hosts: str, dest: str, content: str):
+    """
+    Build a provisioning play that copies 'content' to 'dest'
+    on all hosts in the given 'hosts' group/host pattern.
+    """
+    play = copy.deepcopy(provisioning_play)
+    play[0]["hosts"] = hosts
+    play[0]["tasks"][0]["copy"]["dest"] = dest
     play[0]["tasks"][0]["copy"]["content"] = content
     return play
 
@@ -281,6 +303,7 @@ def get_controller_init_play(host):
     play[0]["hosts"] = host
     return play
 
+# Check the availability of the nodes 
 def wait_for_ssh(inv_file, retries=5, delay=5):
     """
     Wait until Ansible can run a simple command on all hosts via SSH,
@@ -309,27 +332,86 @@ def wait_for_ssh(inv_file, retries=5, delay=5):
 
 
 
+# Parse the config file provided by the user to divide qkd and pqc layers
+def build_qd2_runtime_configs(initial_config: dict):
+    """
+    Given the full config yaml,
+    return (qkd_config, pqc_nodes).
+
+    - qkd_config: same structure as raw_config, but with PQC nodes removed.
+                  If 'config' or 'nodes' are missing, returns None.
+    - pqc_nodes: list of nodes with node_type == 'PQC' (case-insensitive).
+                 [] if none or if 'nodes' missing.
+    """
+    nodes = initial_config.get("nodes")
+    if not isinstance(nodes, list):
+        return (None if "config" not in initial_config else copy.deepcopy(initial_config), [])
+
+    pqc_nodes = []
+    qkd_like_nodes = []
+
+    for node in nodes:
+        node_type = str(node.get("node_type", "")).upper()
+        if node_type == "PQC":
+            pqc_nodes.append(node)
+        else:
+            # QKD, controller, or anything else you want to keep in the QKD view
+            qkd_like_nodes.append(node)
+
+    qkd_config = None
+    if "config" in initial_config:
+        # Only build the QKD config view if the top-level 'config' exists
+        qkd_config = copy.deepcopy(initial_config)
+        qkd_config["nodes"] = qkd_like_nodes
+
+    return qkd_config, pqc_nodes
+
+
+
+
 #Complete functions
 
 def install(config_file, inv_file):
     # wait until SSH is actually ready on all hosts
     wait_for_ssh(inv_file)
 
-    ansible_runner.run(playbook = install_node_play, inventory = inv_file)
+    qkd_config, pqc_nodes = build_qd2_runtime_configs(config_file)
+    has_qkd = qkd_config is not None and qkd_config.get("nodes")
+    has_pqc = bool(pqc_nodes)
 
-#    with  open(config_file, "r") as config_file_o:
-#        config_data = yaml.safe_load(config_file_o)
-    config_array = config_file["config"]
-    controller = config_array["controller"]
-    ns_user = config_array["netsquid_user"]
-    ns_pwd = config_array["netsquid_pwd"]
-    icp = get_controller_play(controller, ns_user, ns_pwd, config_file)
-    rmqp = get_rmq_play(controller)
-    ansible_runner.run(playbook = icp, inventory = inv_file)
-    ansible_runner.run(playbook = rmqp, inventory = inv_file)
+    # # if there is any qd2_node runtime to deploy (QKD or PQC),
+    # #    install qd2-node on all qd2_nodes from the inventory
+    # if has_qkd or has_pqc:
+    #     ansible_runner.run(playbook=install_node_play, inventory=inv_file)
 
-    p = get_provisioning_play(config_file)
-    ansible_runner.run(playbook = p, inventory=inv_file)
+    # # if there is any qkd qd2_node,
+    # #    install the controller and place configuration in all nodes
+    # if has_qkd:
+    #     config_array = qkd_config["config"]
+    #     controller = config_array["controller"]
+    #     ns_user = config_array["netsquid_user"]
+    #     ns_pwd = config_array["netsquid_pwd"]
+
+    #     # Install controller requirements and place config file
+    #     if controller and ns_user and ns_pwd:
+    #         icp = get_controller_play(controller, ns_user, ns_pwd, qkd_config)
+    #         rmqp = get_rmq_play(controller)
+    #         ansible_runner.run(playbook=icp, inventory=inv_file)
+    #         ansible_runner.run(playbook=rmqp, inventory=inv_file)
+        
+    #     qkd_prov_config = get_provisioning_play(
+    #         hosts="qkd_nodes",
+    #         dest="{{py_env}}/site-packages/qd2_node/quditto_v2.yaml",
+    #         content=qkd_config,
+    #         )
+        
+    #     # Copy config file into the qd2_nodes
+    #     ansible_runner.run(playbook=qkd_prov_config, inventory=inv_file)
+    
+    if has_pqc:
+        print(pqc_nodes)
+        pass
+
 
 
 def run(config_file, inv_file):
