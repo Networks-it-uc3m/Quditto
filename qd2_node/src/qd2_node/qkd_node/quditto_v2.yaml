@@ -1,0 +1,70 @@
+---
+quditto_version: 2.0
+config:
+  application_interface: etsi-gs-qkd-004
+  qkd_protocol: bb84
+  controller: A
+  ip_controller: localhost
+  netsquid_user: angelaadiaz
+  netsquid_pwd: NetSquid5
+
+sites:
+  - Sevilla
+  - Malaga
+  - Cadiz
+
+nodes:
+  - node_name: A
+    vault_ip: localhost
+    node_site: Sevilla
+    node_ip: localhost
+    neighbour_nodes:
+
+      - name: B
+        link_length: 20
+        protocol: bb84_att.py
+        eavesdropper: false
+        chanel_parameters:
+
+          - depolar_rate:
+            emission_efficiency: 
+            detection_efficiency:
+            p_loss_length:
+            std: 
+            speed_fraction:
+            distance_factor: 
+            classical_std:
+            gate_duration_A: 
+            gate_noise_rate_A:
+            gate_duration_B:
+            gate_noise_rate_B:
+            dead_time:
+            detector_delay:
+            DCR:
+            num_photons:
+            covery_factor:
+            strategy:
+            max_eps:
+            eps:
+            alpha:
+            beta:
+            CF:
+
+  - node_name: B
+    vault_ip: localhost
+    node_site: Malaga
+    node_ip: localhost
+    neighbour_nodes:
+
+      - name: C
+        link_length: 20
+        protocol: bb84_with_eve.py
+        eavesdropper: true
+        eavesdropper_parameters:
+          eavesdropper_distance: 10
+          percentage_intercepted_qubits: 10
+
+  - node_name: C
+    vault_ip: localhost
+    node_site: Cadiz
+    node_ip: localhost

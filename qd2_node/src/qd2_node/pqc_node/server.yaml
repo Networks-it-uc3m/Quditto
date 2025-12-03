@@ -1,0 +1,7 @@
+crypto:
+  ml-dsa: "ML-DSA-65"
+
+vault:
+  host: "127.0.0.1"
+  port: 8200
+  volume: "vault-pqc1"

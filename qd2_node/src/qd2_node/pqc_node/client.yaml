@@ -1,0 +1,7 @@
+crypto:
+  ml-dsa: "ML-DSA-87"
+
+vault:
+  host: "127.0.0.1"
+  port: 8300
+  volume: "vault-pqc2"
