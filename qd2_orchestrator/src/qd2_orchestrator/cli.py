@@ -28,7 +28,7 @@ def start(config_file, inv_file):
     install(config_file=yaml_config_file, inv_file=yaml_inv_file)
 
     # Once configured, lets run the quditto_node
-    #run(config_file=yaml_config_file, inv_file=yaml_inv_file)
+    run(config_file=yaml_config_file, inv_file=yaml_inv_file)
 
 # Command to stop the emulated qkd-network stopping the python scripts
 
