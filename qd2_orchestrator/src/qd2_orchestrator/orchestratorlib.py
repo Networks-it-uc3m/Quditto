@@ -541,6 +541,15 @@ def build_pqc_node_yamls(node: Dict[str, Any]) -> Tuple[str, Optional[str]]:
             },
         }
         client_yaml = yaml.safe_dump(client_cfg, sort_keys=False)
+    else:
+        client_cfg = {
+            "vault": {
+                "host": vault_ip,
+                "port": vault_port,
+                "volume": vault_volume,
+            },
+        }
+        client_yaml = yaml.safe_dump(client_cfg, sort_keys=False)
         
 
     return server_yaml, client_yaml

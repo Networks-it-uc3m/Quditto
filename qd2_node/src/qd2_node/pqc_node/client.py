@@ -1,5 +1,5 @@
 # Standard libraries for implementation (Step 0.1.1):
-import hashlib, hmac, hvac, os, requests, socket, time, uuid, yaml
+import hashlib, hmac, hvac, os, requests, socket, time, uuid, yaml, argparse
 from pathlib import Path
 
 # Cryptography libraries for the implementation of cryptographic components (Step 0.1.2):
