@@ -1,4 +1,8 @@
+
+# syntax=docker/dockerfile:1.6
+
 FROM ubuntu:22.04
+
 
 ENV DEBIAN_FRONTEND=noninteractive LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
@@ -36,9 +40,18 @@ RUN chmod +x /entrypoint.sh
 # We’ll run commands via sudo inside entrypoint
 USER quditto
 WORKDIR /home/quditto
+ENV PATH="/home/quditto/.local/bin:${PATH}"
 
 RUN pip install --no-cache-dir --upgrade pip && \
-  pip install --no-cache-dir PyYAML pydantic
+  pip install --no-cache-dir PyYAML pydantic 
+
+
+RUN --mount=type=secret,id=netsquid_pipconf,target=/run/secrets/pip.conf,uid=1000,gid=1000,mode=0400 \
+  PIP_CONFIG_FILE=/run/secrets/pip.conf \
+  pip install --no-cache-dir --user netsquid && \
+  pip install --no-cache-dir --user qd2_controller
+
+
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/sshd", "-D", "-e"]
