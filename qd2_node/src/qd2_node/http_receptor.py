@@ -4,6 +4,8 @@ from contextlib import asynccontextmanager
 import os
 import functions
 import sys
+import ssl
+from pathlib import Path
 
 if len(sys.argv) == 4:
     node = sys.argv[3]
@@ -43,6 +45,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 4:
         host = sys.argv[1]
         port = sys.argv[2]
+        node_name = sys.argv[3]
     else:
         sys.exit(1)
 
@@ -50,4 +53,16 @@ if __name__ == "__main__":
     port = int(port) 
     os.environ["HOST"] = host
     os.environ["PORT"] = str(port) 
-    uvicorn.run(app, host=host, port=port)
+
+    home_dir = Path.home()
+    certs_dir = home_dir / "quditto_certs"
+
+    uvicorn.run(
+        app, 
+        host=host, 
+        port=port,
+        ssl_keyfile=str(certs_dir / f"{node_name}_node.key"),
+        ssl_certfile=str(certs_dir / f"{node_name}_node.crt"),
+        ssl_ca_certs=str(certs_dir / f"{node_name}_ca.crt"),
+        ssl_cert_reqs=ssl.CERT_REQUIRED
+    )

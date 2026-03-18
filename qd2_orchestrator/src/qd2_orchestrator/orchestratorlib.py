@@ -3,7 +3,9 @@ import sys
 import ansible_runner
 import json
 import time
+import os
 
+CURRENT_WORKING_DIR = os.getcwd()
 #Definition of the different ansible plays.
 
 ## Installation of the qd2 node package in every node.
@@ -128,6 +130,53 @@ configuring_rmq_play = [
         }
     ]
 
+},
+]
+
+generate_certs_play = [
+    {
+    "name": "Generation of mTLS certificates",
+    "hosts": "all",
+    "tasks":[
+        {
+            "name": "Copy certificate generator script",
+            "ansible.builtin.copy":{
+                "src": "{{py_env}}/site-packages/qd2_orchestrator/generate_certs.sh",
+                "dest": "~/generate_certs.sh",
+                "mode": "0777"
+            }
+        },
+        {
+            "name": "Execute generator script",
+            "shell":{
+                "cmd": "~/generate_certs.sh {{ inventory_hostname }} {{ ansible_host }}"
+            }
+        },
+        {
+            "name": "Fetch SAE certificates to local machine",
+            "ansible.builtin.fetch":{
+                "src": "{{ ansible_env.HOME }}/quditto_certs/SAE_" + "{{ inventory_hostname }}.crt",
+                "dest": CURRENT_WORKING_DIR + "/client_certs/SAE_" + "{{ inventory_hostname }}.crt",
+                "flat": True
+            }
+        },
+        {
+            "name": "Fetch SAE keys to local machine",
+            "ansible.builtin.fetch":{
+                "src": "{{ ansible_env.HOME }}/quditto_certs/SAE_" + "{{ inventory_hostname }}.key",
+                "dest": CURRENT_WORKING_DIR + "/client_certs/SAE_" + "{{ inventory_hostname }}.key",
+                "flat": True
+            }
+        },
+        {
+            "name": "Fetch Node CA certificate",
+            "ansible.builtin.fetch":{
+                "src": "{{ ansible_env.HOME }}/quditto_certs/" + "{{ inventory_hostname }}_ca.crt",
+                "dest": CURRENT_WORKING_DIR + "/client_certs/" + "{{ inventory_hostname }}_ca.crt",
+                "flat": True
+            }
+        }
+    ]
 },
 ]
 
@@ -304,6 +353,8 @@ def run(config_file, inv_file):
 
     #with  open(config_file, "r") as config_file_o:
     #    config_data = yaml.safe_load(config_file_o)
+
+    ansible_runner.run(playbook = generate_certs_play, inventory = inv_file)
 
     nodes_array = config_file["nodes"]
     nodes = {}
