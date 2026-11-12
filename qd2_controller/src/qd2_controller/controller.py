@@ -160,6 +160,76 @@ def emul_BB84(group_id, group_lock, key, d, protocol, origin, n, call_id, params
         logging.info(f"Link {group_id}: Key generated for Alice: {Alice_key}, key generated for Bob: {Bob_key}, delay: {output_time:.4f} sec")
         logging.info(f"Actual time elapsed until key distribution: {real_time:.4f} sec")
 
+def _to_bitstring(x):
+    if isinstance(x, (list, tuple)):
+        return "".join(str(int(b)) for b in x)
+    return str(x)
+
+def _publish(messages):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    channel = connection.channel()
+    channel.exchange_declare(exchange='direct_logs', exchange_type='direct')
+    for routing_key, msg in messages:
+        channel.basic_publish(exchange='direct_logs', routing_key=str(routing_key), body=json.dumps(msg))
+    connection.close()
+
+def emul_raw(group_id, group_lock, size, d, protocol, origin, n, call_id, params):
+    logging.info(f"Preparing link {group_id} for raw measurement simulation")
+    size = int(size)
+
+    with group_lock:
+        start = time.perf_counter()
+        a_bits = a_bases = b_bits = b_bases = ""
+        total_time = 0.0
+
+        while len(a_bits) < size:
+            command = ['python3', str(protocol), str(size - len(a_bits)), str(d), str(params)]
+            result = subprocess.run(command, capture_output=True, text=True)
+            try:
+                out = json.loads(result.stdout)
+                new_a_bits = _to_bitstring(out["alice_bits"])
+                new_a_bases = _to_bitstring(out["alice_bases"])
+                new_b_bits = _to_bitstring(out["bob_bits"])
+                new_b_bases = _to_bitstring(out["bob_bases"])
+                t = float(out["time"])
+            except (json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
+                logging.error(f"Link {group_id}: Error processing raw results: {e} | stderr: {result.stderr}")
+                _publish([(origin, {"service": "raw", "call_id": call_id,
+                                    "error": "Raw measurement simulation failed"})])
+                return
+
+            if len(new_a_bits) == 0:
+                logging.error(f"Link {group_id}: raw script returned no rounds")
+                _publish([(origin, {"service": "raw", "call_id": call_id,
+                                    "error": "Raw measurement script returned no rounds"})])
+                return
+
+            a_bits += new_a_bits
+            a_bases += new_a_bases
+            b_bits += new_b_bits
+            b_bases += new_b_bases
+            total_time += t
+
+        a_bits, a_bases = a_bits[:size], a_bases[:size]
+        b_bits, b_bases = b_bits[:size], b_bases[:size]
+
+        # Wait until the simulated time has elapsed
+        remaining = (start + total_time) - time.perf_counter()
+        if remaining > 0:
+            time.sleep(remaining)
+
+        measurement_id = str(uuid.uuid4())
+
+        # Requester (Alice / sender): no "node" field -> receive_qd2 forwards it to call_id
+        message_A = {"service": "raw", "measurement_ID": measurement_id, "role": "sender",
+                     "peer": n, "bits": a_bits, "bases": a_bases, "call_id": call_id}
+        # Peer (Bob / receiver): has "node" field -> receive_qd2 stores it
+        message_B = {"service": "raw", "node": origin, "measurement_ID": measurement_id,
+                     "data": {"role": "receiver", "peer": origin, "bits": b_bits, "bases": b_bases}}
+
+        _publish([(origin, message_A), (n, message_B)])
+        logging.info(f"Link {group_id}: raw measurements delivered, ID {measurement_id}, "
+                     f"{size} rounds, simulated time {total_time:.4f} s")
 # Search index of a specific link
 def find_link_position(links, target_name):
     for index, item in enumerate(links):
@@ -197,6 +267,7 @@ def callback(ch, method, properties, body):
 
     key = body["key"]
     call_id = body["call_id"]
+    service = body.get("service", "key")
     
     if reverse == 1:
         x = origin
@@ -214,6 +285,8 @@ def callback(ch, method, properties, body):
                     if neighbour.get("name") == n and "link_length" in neighbour:
                         d = neighbour["link_length"]
                         protocol = neighbour["protocol"]
+                        if service == "raw":
+                            protocol = neighbour.get("raw_protocol", "raw_dummy.py")
                         filtered_params = {}
                         ch_params_list = neighbour.get("chanel_parameters", [])
                         if ch_params_list:
@@ -241,7 +314,8 @@ def callback(ch, method, properties, body):
             n = x
 
         d=str(d)
-        hilo = threading.Thread(target=emul_BB84, args=(group_id, groups_locks[group_id], key, d, protocol, origin, n, call_id, params))
+        target = emul_raw if service == "raw" else emul_BB84
+        hilo = threading.Thread(target=target, args=(group_id, groups_locks[group_id], key, d, protocol, origin, n, call_id, params))
         hilo.start()
 
     else:

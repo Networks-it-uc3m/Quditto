@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 import os
 import functions
 import sys
+from typing import Optional
 
 if len(sys.argv) == 4:
     node = sys.argv[3]
@@ -37,6 +38,14 @@ def get_key_with_ID(master_SAE_ID: str, key_ID: str):
     result = str(functions.get_key_with_ID(node,master_SAE_ID,key_ID))
     
     return {result}
+
+@app.get("/api/v1/raw/{peer_SAE_ID}/measurements")
+def get_raw_measurements(peer_SAE_ID: str, size: Optional[int] = None, measurement_ID: Optional[str] = None):
+    if (size is None) == (measurement_ID is None):
+        return {"error": "Specify exactly one of 'size' or 'measurement_ID'"}
+    if size is not None:
+        return functions.get_raw(node, peer_SAE_ID, size)
+    return functions.get_raw_with_ID(node, peer_SAE_ID, measurement_ID)
 
 if __name__ == "__main__":
     import uvicorn

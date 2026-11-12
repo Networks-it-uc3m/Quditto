@@ -89,6 +89,13 @@ async def main():
                     )
                     #print(f"Message redirected to: {node}api")
                 else:
+                    if message_body.get("service") == "raw":
+                        logging.info("Storing raw measurements received for future use")
+                        store_key_data("raw_" + message_body["node"],
+                                       message_body["measurement_ID"],
+                                       message_body["data"],
+                                       container)
+                        return
                     logging.info("Storing cryptographic material received for future use")
                     # Else, store the key's data in the container
                     node_m = message_body["node"]
@@ -111,7 +118,24 @@ async def main():
             async for message in input_queue:  # Asynchronously consume messages from the input queue
                 async with message.process():
                     message_body = json.loads(message.body)
-                    
+                    if message_body.get("service") == "raw" and "measurement_ID" in message_body:
+                        logging.info("Get raw measurements with ID request received")
+                        n = message_body["node"]
+                        measurement_ID = message_body["measurement_ID"]
+                        call_id = message_body["call_id"]
+                        store = container.get("raw_" + n)
+                        if store and measurement_ID in store['key_IDs']:
+                            index = store['key_IDs'].index(measurement_ID)
+                            reply = dict(store['keys'][index])
+                            reply["measurement_ID"] = measurement_ID
+                        else:
+                            logging.warning("No raw measurements with specified measurement_ID")
+                            reply = {"error": "No raw measurements with specified measurement_ID"}
+                        await exchange.publish(
+                            aio_pika.Message(json.dumps(reply).encode()),
+                            routing_key=call_id,
+                        )
+                        continue                    
                     if any("key_ID" in key for key in message_body):
                         logging.info("Get key with ID request recieved")
                         # If the message is with ID
